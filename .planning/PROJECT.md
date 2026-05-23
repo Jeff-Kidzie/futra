@@ -55,6 +55,7 @@ Consistent profit with manageable drawdowns — the system must deliver steady r
 - **Platform**: MetaTrader 5 desktop — single platform target
 - **Scope**: Single personal trading account — no multi-tenant or SaaS requirements
 - **Web Access**: Dashboard must be reachable from anywhere, not just localhost
+- **Development Method**: Test-Driven Development (TDD) — all code must be built with tests first and must be testable locally
 
 ## Key Decisions
 
@@ -66,6 +67,7 @@ Consistent profit with manageable drawdowns — the system must deliver steady r
 | Minimal cost stack | Developer budget is limited; MT5 provides data, Python has mature free ML ecosystem | — Pending |
 | Web dashboard first, full platform later | Monitoring is essential from day one; full trading UI is complex and can evolve incrementally | — Pending |
 | Internet-accessible dashboard | Need to monitor trades from anywhere, not just the machine running MT5 | — Pending |
+| TDD and local testability | Every component must be built test-first with local test execution; no code ships without tests; financial system correctness demands it | — Pending |
 
 ## Evolution
 
@@ -85,4 +87,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-05-23 after initialization*
+*Last updated: 2026-05-23 after adding TDD constraint*

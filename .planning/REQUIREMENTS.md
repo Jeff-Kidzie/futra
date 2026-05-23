@@ -92,45 +92,45 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
-| DATA-04 | Phase 1 | Pending |
-| DATA-05 | Phase 1 | Pending |
-| DATA-06 | Phase 1 | Pending |
-| DATA-07 | Phase 2 | Pending |
-| DATA-08 | Phase 1 | Pending |
-| DATA-09 | Phase 1 | Pending |
-| DATA-10 | Phase 1 | Pending |
-| RISK-01 | Phase 1 | Pending |
-| RISK-02 | Phase 2 | Pending |
-| RISK-03 | Phase 2 | Pending |
-| RISK-04 | Phase 2 | Pending |
-| RISK-05 | Phase 1 | Pending |
-| RISK-06 | Phase 3 | Pending |
-| AI-01 | Phase 3 | Pending |
-| AI-02 | Phase 3 | Pending |
-| AI-03 | Phase 1 | Pending |
-| AI-04 | Phase 3 | Pending |
-| AI-05 | Phase 3 | Pending |
-| BACK-01 | Phase 4 | Pending |
-| BACK-02 | Phase 4 | Pending |
-| BACK-03 | Phase 4 | Pending |
-| BACK-04 | Phase 4 | Pending |
-| BACK-05 | Phase 4 | Pending |
-| DASH-01 | Phase 5 | Pending |
-| DASH-02 | Phase 5 | Pending |
-| DASH-03 | Phase 5 | Pending |
-| DASH-04 | Phase 5 | Pending |
-| DASH-05 | Phase 5 | Pending |
-| DASH-06 | Phase 5 | Pending |
-| DASH-07 | Phase 5 | Pending |
+| DATA-01 | Phase 1: Foundation + Safety | Pending |
+| DATA-02 | Phase 1: Foundation + Safety | Pending |
+| DATA-03 | Phase 1: Foundation + Safety | Pending |
+| DATA-04 | Phase 1: Foundation + Safety | Pending |
+| DATA-05 | Phase 1: Foundation + Safety | Pending |
+| DATA-06 | Phase 1: Foundation + Safety | Pending |
+| DATA-07 | Phase 1: Foundation + Safety | Pending |
+| DATA-08 | Phase 1: Foundation + Safety | Pending |
+| DATA-09 | Phase 1: Foundation + Safety | Pending |
+| DATA-10 | Phase 1: Foundation + Safety | Pending |
+| RISK-01 | Phase 1: Foundation + Safety | Pending |
+| RISK-02 | Phase 1: Foundation + Safety | Pending |
+| RISK-03 | Phase 1: Foundation + Safety | Pending |
+| RISK-04 | Phase 1: Foundation + Safety | Pending |
+| RISK-05 | Phase 1: Foundation + Safety | Pending |
+| AI-03 | Phase 1: Foundation + Safety | Pending |
+| AI-01 | Phase 2: AI Engine | Pending |
+| AI-02 | Phase 2: AI Engine | Pending |
+| AI-04 | Phase 2: AI Engine | Pending |
+| AI-05 | Phase 2: AI Engine | Pending |
+| RISK-06 | Phase 2: AI Engine | Pending |
+| BACK-01 | Phase 3: Validation | Pending |
+| BACK-02 | Phase 3: Validation | Pending |
+| BACK-03 | Phase 3: Validation | Pending |
+| BACK-04 | Phase 3: Validation | Pending |
+| BACK-05 | Phase 3: Validation | Pending |
+| DASH-01 | Phase 4: Monitoring Dashboard | Pending |
+| DASH-02 | Phase 4: Monitoring Dashboard | Pending |
+| DASH-03 | Phase 4: Monitoring Dashboard | Pending |
+| DASH-04 | Phase 4: Monitoring Dashboard | Pending |
+| DASH-05 | Phase 4: Monitoring Dashboard | Pending |
+| DASH-06 | Phase 4: Monitoring Dashboard | Pending |
+| DASH-07 | Phase 4: Monitoring Dashboard | Pending |
 
 **Coverage:**
-- v1 requirements: 32 total
-- Mapped to phases: 32
+- v1 requirements: 33 total
+- Mapped to phases: 33
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-05-23*
-*Last updated: 2026-05-23 after initial definition*
+*Last updated: 2026-05-23 after roadmap creation*
