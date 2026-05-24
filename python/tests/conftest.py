@@ -82,8 +82,11 @@ def sample_ohlcv_data():
 
 @pytest.fixture
 def mock_mt5_with_data(mock_mt5, sample_ohlcv_data):
-    """Mock MT5 that returns sample OHLCV data from copy_rates_from_pos()."""
+    """Mock MT5 that returns sample OHLCV data from copy_rates_from_pos().
+    Patches both mt5_connector.mt5 (connection layer) and data_pipeline.mt5
+    (data layer, which imports MetaTrader5 separately) with the same mock."""
     def copy_rates_from_pos(symbol, timeframe, start_pos, count):
         return sample_ohlcv_data.iloc[start_pos:start_pos + count].to_records(index=False)
     mock_mt5.copy_rates_from_pos.side_effect = copy_rates_from_pos
-    return mock_mt5
+    with patch("python.data_pipeline.mt5", mock_mt5):
+        yield mock_mt5
