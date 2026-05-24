@@ -29,12 +29,19 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. EA uses hardcoded safe defaults and continues trading when Python crashes or IPC fails
   4. Python reads historical and real-time OHLCV data from MT5 across multiple symbols and timeframes
   5. Circuit breakers stop trading when drawdown or daily loss exceeds configured thresholds
-**Plans**: 3 plans
+**Plans**: 3 plans in 2 waves
 
-Plans:
-- [ ] 01-01: EA core — kill switch, market orders, position management, SL/TP, trade logging, safe defaults
-- [ ] 01-02: Data pipeline — MT5 Python connection, multi-asset data, real-time OHLCV, file-based IPC, connection resilience
-- [ ] 01-03: Risk controls — pending orders, drawdown circuit breaker, daily loss cap, max positions per symbol, position sizing validation
+**Wave 1** (parallel — no shared files):
+- [ ] 01-01-PLAN.md — EA core: kill switch, market orders, position management, SL/TP, trade logging, safe defaults
+- [ ] 01-02-PLAN.md — Data pipeline: MT5 Python connection, multi-asset data, real-time OHLCV, file-based IPC, connection resilience
+
+**Wave 2** *(blocked on Wave 1 completion)*:
+- [ ] 01-03-PLAN.md — Risk controls: pending orders, drawdown circuit breaker, daily loss cap, max positions per symbol, position sizing validation
+
+Cross-cutting constraints:
+- IPC file format contract (kill_switch.json, {SYMBOL}_params.json) defined in 01-01, consumed by 01-02
+- EA OnTick structure defined in 01-01, extended by 01-03 with RiskManager gate
+- All tests use mock MT5 data — no live MT5 connection required (D-11)
 
 ### Phase 2: AI Engine
 **Goal**: AI detects market regimes and adapts trading parameters, with position sizing adjusted by regime and volatility
