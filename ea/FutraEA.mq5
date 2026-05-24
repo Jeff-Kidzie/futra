@@ -17,6 +17,7 @@
 #include "include/OrderManager.mqh"
 #include "include/PositionManager.mqh"
 #include "include/IPCReader.mqh"
+#include "include/RiskManager.mqh"
 
 //+------------------------------------------------------------------+
 //| Expert initialization function                                    |
@@ -24,6 +25,11 @@
 int OnInit()
 {
    LogInfo("Futra EA initialized — version 1.0");
+
+   // Initialize risk management state
+   s_peakBalance = AccountInfoDouble(ACCOUNT_BALANCE);
+   ResetDailyLossTracking();
+
    return(INIT_SUCCEEDED);
 }
 
@@ -40,8 +46,9 @@ void OnDeinit(const int reason)
 //| Execution loop:                                                   |
 //|   1. CheckKillSwitch() — halt trading if kill switch active       |
 //|   2. ReadSymbolParams() per symbol — check staleness              |
-//|   3. Trading signal evaluation (placeholder for future phase)     |
-//|   4. OpenBuyOrder/OpenSellOrder — execute trades with SL/TP       |
+//|   3. IsTradingAllowed() — risk gate before any order execution    |
+//|   4. Trading signal evaluation (placeholder for future phase)     |
+//|   5. OpenBuyOrder/OpenSellOrder — execute trades with SL/TP       |
 //+------------------------------------------------------------------+
 void OnTick()
 {
@@ -95,7 +102,12 @@ void OnTick()
          posSize = InpMaxPositionSize;
       }
 
-      // === STEP 4: Trading signal determination ===
+      // === STEP 4: Risk gate — pre-trade risk checks before any order ===
+      double volume = GetDefaultVolume(sym);
+      if(!IsTradingAllowed(sym, volume))
+         continue;  // Risk gate blocked — skip this symbol
+
+      // === STEP 5: Trading signal determination ===
       // Trading signal logic will be implemented in a future phase.
       // The EA core is ready to execute when signals arrive.
       // Placeholder: for now, the EA monitors and logs but does not

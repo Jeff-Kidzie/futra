@@ -11,6 +11,7 @@ The IPC contract tests use test_helpers and verify the JSONL log formats
 that the EA writes through its file-based interface.
 """
 import json
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -153,10 +154,11 @@ class TestRiskManagerModule:
         assert "20.0" in content
         # Daily loss cap: 5% (per plan)
         assert "5.0" in content
-        # Max positions per symbol: 1 (per plan)
-        assert "InpMaxPositionsPerSymbol = 1" in content or "MaxPositions = 1" in content
+        # Max positions per symbol: 1 (per plan) — allow whitespace variance
+        assert "InpMaxPositionsPerSymbol" in content
+        assert re.search(r"InpMaxPositionsPerSymbol\s*=\s*1", content) is not None
         # Margin buffer: 150% (per plan)
-        assert "150.0" in content or "InpMinMarginBufferPercent" in content
+        assert "150.0" in content
 
 
 # ---------------------------------------------------------------------------
