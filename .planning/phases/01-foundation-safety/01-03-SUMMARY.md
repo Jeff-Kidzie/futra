@@ -122,5 +122,17 @@ Ready for Phase 2: AI Engine (regime detection, adaptive parameters, AI decision
 
 ---
 
+## Self-Check: PASSED
+
+- [x] `ea/include/RiskManager.mqh` exists on disk
+- [x] `tests/ea/test_risk_controls.py` exists on disk
+- [x] `.planning/phases/01-foundation-safety/01-03-SUMMARY.md` exists on disk
+- [x] RED commit `dd92c6d` present in git log
+- [x] GREEN commit `96eefc3` present in git log
+- [x] SUMMARY commit `d0ff595` present in git log
+- [x] All 145 EA tests pass (`python -m pytest tests/ea/ -q`)
+
+---
+
 *Phase: 01-foundation-safety*
 *Completed: 2026-05-24*
