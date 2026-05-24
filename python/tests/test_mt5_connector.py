@@ -67,10 +67,11 @@ class TestEnsureConnected:
     def test_ensure_connected_reconnects(self, mock_mt5):
         """ensure_connected() reconnects when mt5 is disconnected."""
         initialize_mt5()
-        # Simulate disconnection
-        mock_mt5.terminal_info.return_value = None
-        # Reset mock count after initial init
         initial_calls = mock_mt5.initialize.call_count
+        # Use side_effect: first return None (simulates disconnect),
+        # then return valid terminal_info (simulates successful reconnect)
+        terminal_responses = [None, mock_mt5.terminal_info.return_value]
+        mock_mt5.terminal_info.side_effect = terminal_responses
         ensure_connected()
         # Should have called initialize at least once more (reconnect)
         assert mock_mt5.initialize.call_count > initial_calls
