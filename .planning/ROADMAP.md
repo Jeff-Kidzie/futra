@@ -32,8 +32,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 3 plans in 2 waves
 
 **Wave 1** (parallel — no shared files):
-- [ ] 01-01-PLAN.md — EA core: kill switch, market orders, position management, SL/TP, trade logging, safe defaults
-- [ ] 01-02-PLAN.md — Data pipeline: MT5 Python connection, multi-asset data, real-time OHLCV, file-based IPC, connection resilience
+- [x] 01-01-PLAN.md — EA core: kill switch, market orders, position management, SL/TP, trade logging, safe defaults
+- [x] 01-02-PLAN.md — Data pipeline: MT5 Python connection, multi-asset data, real-time OHLCV, file-based IPC, connection resilience
 
 **Wave 2** *(blocked on Wave 1 completion)*:
 - [ ] 01-03-PLAN.md — Risk controls: pending orders, drawdown circuit breaker, daily loss cap, max positions per symbol, position sizing validation
@@ -97,7 +97,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation + Safety | 0/3 | Not started | - |
+| 1. Foundation + Safety | 2/3 | In progress | - |
 | 2. AI Engine | 0/2 | Not started | - |
 | 3. Validation | 0/2 | Not started | - |
 | 4. Monitoring Dashboard | 0/2 | Not started | - |
