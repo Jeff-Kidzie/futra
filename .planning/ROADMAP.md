@@ -12,7 +12,7 @@ Futra starts with a safe, self-contained trading foundation on MT5 — kill swit
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Foundation + Safety** - EA executes trades on MT5 with kill switch, safe defaults, data pipeline, and risk circuit breakers
+- [x] **Phase 1: Foundation + Safety** - EA executes trades on MT5 with kill switch, safe defaults, data pipeline, and risk circuit breakers
 - [ ] **Phase 2: AI Engine** - Regime detection adapts SL/TP and position sizing based on market conditions
 - [ ] **Phase 3: Validation** - Backtesting and paper trading prove the system works before live capital
 - [ ] **Phase 4: Monitoring Dashboard** - Trading activity and AI decisions visible from anywhere via authenticated web dashboard
@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] 01-02-PLAN.md — Data pipeline: MT5 Python connection, multi-asset data, real-time OHLCV, file-based IPC, connection resilience
 
 **Wave 2** *(blocked on Wave 1 completion)*:
-- [ ] 01-03-PLAN.md — Risk controls: pending orders, drawdown circuit breaker, daily loss cap, max positions per symbol, position sizing validation
+- [x] 01-03-PLAN.md — Risk controls: pending orders, drawdown circuit breaker, daily loss cap, max positions per symbol, position sizing validation
 
 Cross-cutting constraints:
 - IPC file format contract (kill_switch.json, {SYMBOL}_params.json) defined in 01-01, consumed by 01-02
@@ -97,7 +97,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation + Safety | 2/3 | In progress | - |
+| 1. Foundation + Safety | 3/3 | Complete | 2026-05-24 |
 | 2. AI Engine | 0/2 | Not started | - |
 | 3. Validation | 0/2 | Not started | - |
 | 4. Monitoring Dashboard | 0/2 | Not started | - |
