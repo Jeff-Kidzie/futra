@@ -52,11 +52,13 @@ Cross-cutting constraints:
   2. AI adjusts SL/TP levels and position sizing based on detected regime and volatility
   3. Every AI parameter decision is logged with regime, confidence, parameters chosen, and reasoning
   4. Strategy parameters can be exported and imported as JSON/YAML for versioning and A/B testing
-**Plans**: 2 plans
+**Plans**: 2 plans in 2 waves
 
-Plans:
-- [ ] 02-01: Regime detection model — classify market state per symbol/timeframe with confidence, adaptive SL/TP and position sizing
-- [ ] 02-02: Decision logging and strategy management — log every AI decision, export/import strategy configs
+**Wave 1**:
+- [ ] 02-01-PLAN.md — Regime detection model, adaptive SL/TP and position sizing, AI engine orchestration (features, regime detector, parameter adapter, engine)
+
+**Wave 2** *(blocked on Wave 1 completion)*:
+- [ ] 02-02-PLAN.md — Decision logging and strategy management (JSONL logger, strategy JSON export/import, engine integration)
 
 ### Phase 3: Validation
 **Goal**: The trading system is rigorously validated through backtesting and paper trading before any live capital is risked
