@@ -32,8 +32,8 @@
 - [x] **AI-01**: Regime detection model classifies market state (trending, ranging, volatile, quiet) with confidence score per symbol per timeframe
 - [x] **AI-02**: Adaptive parameter engine adjusts SL/TP levels and position sizing based on detected regime and volatility
 - [ ] **AI-03**: EA uses hardcoded safe defaults when AI parameters are unavailable (Python crash, IPC failure)
-- [ ] **AI-04**: AI decision log records every parameter decision: regime detected, confidence, chosen parameters, and reasoning
-- [ ] **AI-05**: Strategy parameter export/import as JSON/YAML for versioning and A/B testing different models
+- [x] **AI-04**: AI decision log records every parameter decision: regime detected, confidence, chosen parameters, and reasoning
+- [x] **AI-05**: Strategy parameter export/import as JSON/YAML for versioning and A/B testing different models
 
 ### Backtesting & Validation
 
@@ -110,8 +110,8 @@
 | AI-03 | Phase 1: Foundation + Safety | Pending |
 | AI-01 | Phase 2: AI Engine | Complete |
 | AI-02 | Phase 2: AI Engine | Complete |
-| AI-04 | Phase 2: AI Engine | Pending |
-| AI-05 | Phase 2: AI Engine | Pending |
+| AI-04 | Phase 2: AI Engine | Complete |
+| AI-05 | Phase 2: AI Engine | Complete |
 | RISK-06 | Phase 2: AI Engine | Complete |
 | BACK-01 | Phase 3: Validation | Pending |
 | BACK-02 | Phase 3: Validation | Pending |

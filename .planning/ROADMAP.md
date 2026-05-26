@@ -13,7 +13,7 @@ Futra starts with a safe, self-contained trading foundation on MT5 — kill swit
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation + Safety** - EA executes trades on MT5 with kill switch, safe defaults, data pipeline, and risk circuit breakers
-- [ ] **Phase 2: AI Engine** - Regime detection adapts SL/TP and position sizing based on market conditions
+- [x] **Phase 2: AI Engine** - Regime detection adapts SL/TP and position sizing based on market conditions (completed 2026-05-26)
 - [ ] **Phase 3: Validation** - Backtesting and paper trading prove the system works before live capital
 - [ ] **Phase 4: Monitoring Dashboard** - Trading activity and AI decisions visible from anywhere via authenticated web dashboard
 
@@ -58,7 +58,7 @@ Cross-cutting constraints:
 - [x] 02-01-PLAN.md — Regime detection model, adaptive SL/TP and position sizing, AI engine orchestration (features, regime detector, parameter adapter, engine)
 
 **Wave 2** *(blocked on Wave 1 completion)*:
-- [ ] 02-02-PLAN.md — Decision logging and strategy management (JSONL logger, strategy JSON export/import, engine integration)
+- [x] 02-02-PLAN.md — Decision logging and strategy management (JSONL logger, strategy JSON export/import, engine integration)
 
 ### Phase 3: Validation
 **Goal**: The trading system is rigorously validated through backtesting and paper trading before any live capital is risked
@@ -118,6 +118,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation + Safety | 3/3 | Complete | 2026-05-24 |
-| 2. AI Engine | 1/2 | In Progress|  |
+| 2. AI Engine | 2/2 | Complete   | 2026-05-26 |
 | 3. Validation | 0/2 | Not started | - |
 | 4. Monitoring Dashboard | 0/3 | Not started | - |
