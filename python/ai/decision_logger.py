@@ -146,7 +146,7 @@ class DecisionLogger:
             with open(log_path, "a") as f:
                 f.write(json.dumps(record) + "\n")
             logger.debug(f"Logged AI decision: {symbol} {regime}")
-        except IOError as e:
+        except OSError as e:
             logger.error(f"Failed to write decision log: {e}")
 
         return log_path

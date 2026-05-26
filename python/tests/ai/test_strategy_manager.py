@@ -109,6 +109,8 @@ def test_round_trip_produces_identical_output(manager, detector, adapter, tmp_pa
     orig_params = adapter.adapt("trending", 0.8, 0.15)
     new_params = new_adapter.adapt("trending", 0.8, 0.15)
     assert orig_params["sl_pips"] == new_params["sl_pips"]
+    assert orig_params["tp_pips"] == new_params["tp_pips"]
+    assert orig_params["lot_size"] == new_params["lot_size"]
 
 
 def test_import_raises_on_missing_keys(manager, tmp_path):

@@ -51,6 +51,9 @@ class ParameterAdapter:
         self.default_tp = default_tp_pips
         self.default_lot = default_lot_size
         self.max_risk = max_risk_pct
+        self.SL_MULTIPLIERS = dict(self.__class__.SL_MULTIPLIERS)
+        self.TP_MULTIPLIERS = dict(self.__class__.TP_MULTIPLIERS)
+        self.LOT_MULTIPLIERS = dict(self.__class__.LOT_MULTIPLIERS)
 
     def adapt(
         self,
@@ -126,6 +129,10 @@ class ParameterAdapter:
         """
         sl_percent = adapted["sl_pips"] * 0.01
         tp_percent = adapted["tp_pips"] * 0.01
+
+        if "JPY" in symbol.upper():
+            sl_percent = adapted["sl_pips"] * 0.001
+            tp_percent = adapted["tp_pips"] * 0.001
         return {
             "symbol": symbol,
             "sl_percent": round(sl_percent, 4),

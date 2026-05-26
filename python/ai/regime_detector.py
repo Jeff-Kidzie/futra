@@ -71,7 +71,13 @@ class RegimeDetector:
         if (not pd.isna(vol) and vol > self.vol_high) or (
             not pd.isna(bb) and bb > self.bb_high
         ):
-            confidence = min(0.9, 0.6 + min((vol - self.vol_high) * 2.0, 0.3))
+            vol_contrib = 0.0
+            if not pd.isna(vol):
+                vol_contrib = min((vol - self.vol_high) * 2.0, 0.3)
+            bb_contrib = 0.0
+            if not pd.isna(bb):
+                bb_contrib = min((bb - self.bb_high) / self.bb_high, 0.3)
+            confidence = min(0.9, 0.6 + max(vol_contrib, bb_contrib))
             return (self.VOLATILE, round(confidence, 2))
 
         # TRENDING: Strong ADX + price far from SMA

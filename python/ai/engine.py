@@ -7,7 +7,9 @@ Per AI-04: Logs every parameter decision with full context.
 """
 import logging
 
-from ..config import DEFAULT_SYMBOLS
+import pandas as pd
+
+from ..config import DEFAULT_SYMBOLS, AI_DEFAULT_TIMEFRAME, AI_DEFAULT_EQUITY
 from ..mt5_connector import ensure_connected, MT5Error
 from ..data_pipeline import fetch_historical_ohlcv
 from ..ipc.ipc_writer import write_symbol_params
@@ -23,7 +25,7 @@ class AIEngine:
     def __init__(
         self,
         symbols: list[str] | None = None,
-        timeframe: str = "H1",
+        timeframe: str = AI_DEFAULT_TIMEFRAME,
         regime_detector: RegimeDetector | None = None,
         parameter_adapter: ParameterAdapter | None = None,
         decision_logger: DecisionLogger | None = None,
@@ -53,7 +55,11 @@ class AIEngine:
 
             # 4. Get volatility and ATR for SL scaling
             volatility = features.get("volatility_20", None)
+            if volatility is not None and pd.isna(volatility):
+                volatility = None
             atr_pips = features.get("atr_14", None)
+            if atr_pips is not None and pd.isna(atr_pips):
+                atr_pips = None
 
             # 5. Adapt parameters
             adapted = self.adapter.adapt(
@@ -61,7 +67,7 @@ class AIEngine:
                 confidence=confidence,
                 volatility=volatility,
                 atr_pips=atr_pips,
-                equity=10000.0,
+                equity=AI_DEFAULT_EQUITY,
             )
 
             # 6. Convert to IPC format and write
