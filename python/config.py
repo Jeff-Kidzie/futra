@@ -41,3 +41,9 @@ RETRY_DELAY_SECONDS = 5.0
 
 # Bars to fetch for historical data
 DEFAULT_BAR_COUNT = 1000
+
+# AI Engine configuration
+AI_LOG_DIR = Path(os.getenv("FUTRA_AI_LOG_DIR", str(Path(__file__).parent / "ai" / "decisions")))
+AI_STRATEGY_DIR = Path(os.getenv("FUTRA_AI_STRATEGY_DIR", str(Path(__file__).parent / "ai" / "strategies")))
+AI_DEFAULT_TIMEFRAME = os.getenv("FUTRA_AI_TIMEFRAME", "H1")
+AI_DEFAULT_EQUITY = float(os.getenv("FUTRA_AI_EQUITY", "10000.0"))
