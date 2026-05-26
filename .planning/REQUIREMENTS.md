@@ -25,12 +25,12 @@
 - [ ] **RISK-03**: Daily loss cap: stop trading for the day when realized losses exceed configured limit
 - [ ] **RISK-04**: Maximum open positions per symbol to prevent over-concentration
 - [ ] **RISK-05**: Position sizing validation using MT5 order_calc_margin() to ensure sufficient margin before placing orders
-- [ ] **RISK-06**: AI-adaptive position sizing based on account equity, recent win rate, volatility, and regime
+- [x] **RISK-06**: AI-adaptive position sizing based on account equity, recent win rate, volatility, and regime
 
 ### AI Engine
 
-- [ ] **AI-01**: Regime detection model classifies market state (trending, ranging, volatile, quiet) with confidence score per symbol per timeframe
-- [ ] **AI-02**: Adaptive parameter engine adjusts SL/TP levels and position sizing based on detected regime and volatility
+- [x] **AI-01**: Regime detection model classifies market state (trending, ranging, volatile, quiet) with confidence score per symbol per timeframe
+- [x] **AI-02**: Adaptive parameter engine adjusts SL/TP levels and position sizing based on detected regime and volatility
 - [ ] **AI-03**: EA uses hardcoded safe defaults when AI parameters are unavailable (Python crash, IPC failure)
 - [ ] **AI-04**: AI decision log records every parameter decision: regime detected, confidence, chosen parameters, and reasoning
 - [ ] **AI-05**: Strategy parameter export/import as JSON/YAML for versioning and A/B testing different models
@@ -108,11 +108,11 @@
 | RISK-04 | Phase 1: Foundation + Safety | Pending |
 | RISK-05 | Phase 1: Foundation + Safety | Pending |
 | AI-03 | Phase 1: Foundation + Safety | Pending |
-| AI-01 | Phase 2: AI Engine | Pending |
-| AI-02 | Phase 2: AI Engine | Pending |
+| AI-01 | Phase 2: AI Engine | Complete |
+| AI-02 | Phase 2: AI Engine | Complete |
 | AI-04 | Phase 2: AI Engine | Pending |
 | AI-05 | Phase 2: AI Engine | Pending |
-| RISK-06 | Phase 2: AI Engine | Pending |
+| RISK-06 | Phase 2: AI Engine | Complete |
 | BACK-01 | Phase 3: Validation | Pending |
 | BACK-02 | Phase 3: Validation | Pending |
 | BACK-03 | Phase 3: Validation | Pending |

@@ -55,7 +55,7 @@ Cross-cutting constraints:
 **Plans**: 2 plans in 2 waves
 
 **Wave 1**:
-- [ ] 02-01-PLAN.md — Regime detection model, adaptive SL/TP and position sizing, AI engine orchestration (features, regime detector, parameter adapter, engine)
+- [x] 02-01-PLAN.md — Regime detection model, adaptive SL/TP and position sizing, AI engine orchestration (features, regime detector, parameter adapter, engine)
 
 **Wave 2** *(blocked on Wave 1 completion)*:
 - [ ] 02-02-PLAN.md — Decision logging and strategy management (JSONL logger, strategy JSON export/import, engine integration)
@@ -118,6 +118,6 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation + Safety | 3/3 | Complete | 2026-05-24 |
-| 2. AI Engine | 0/2 | Not started | - |
+| 2. AI Engine | 1/2 | In Progress|  |
 | 3. Validation | 0/2 | Not started | - |
 | 4. Monitoring Dashboard | 0/3 | Not started | - |
