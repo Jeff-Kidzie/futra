@@ -119,3 +119,81 @@ def test_engine_writes_ipc_in_correct_format():
     call_kwargs = mock_write.call_args.kwargs
     expected_keys = {"symbol", "sl_percent", "tp_percent", "max_position_size", "regime", "confidence"}
     assert expected_keys.issubset(set(call_kwargs.keys())), f"Missing keys: {expected_keys - set(call_kwargs.keys())}"
+
+
+# --- Decision Logger Integration Tests (Plan 02-02, Task 3) ---
+
+from python.ai.decision_logger import DecisionLogger
+
+
+def test_engine_logs_decision_when_logger_provided():
+    """Test 5: Engine calls DecisionLogger.log_decision() with correct params."""
+    mock_logger = MagicMock(spec=DecisionLogger)
+    detector = RegimeDetector()
+    adapter = ParameterAdapter()
+    engine = AIEngine(
+        symbols=["EURUSD"],
+        timeframe="H1",
+        regime_detector=detector,
+        parameter_adapter=adapter,
+        decision_logger=mock_logger,
+    )
+
+    mock_df = _mock_df()
+    mock_features = _mock_features()
+
+    with patch("python.ai.engine.fetch_historical_ohlcv", return_value=mock_df), \
+         patch("python.ai.engine.compute_features", return_value=mock_features), \
+         patch("python.ai.engine.ensure_connected"), \
+         patch("python.ai.engine.write_symbol_params"):
+        engine.evaluate_symbol("EURUSD")
+
+    mock_logger.log_decision.assert_called_once()
+    call_kwargs = mock_logger.log_decision.call_args.kwargs
+    assert call_kwargs["symbol"] == "EURUSD"
+    assert call_kwargs["sl_pips"] > 0
+    assert call_kwargs["tp_pips"] > 0
+    assert call_kwargs["lot_size"] > 0
+
+
+def test_engine_passes_features_to_logger():
+    """Test 6: Feature snapshot is passed to the decision logger."""
+    mock_logger = MagicMock(spec=DecisionLogger)
+    engine = AIEngine(symbols=["EURUSD"], decision_logger=mock_logger)
+
+    mock_df = _mock_df()
+    mock_features = {"adx_14": 30.0, "volatility_20": 0.15, "atr_14": 25.0}
+
+    with patch("python.ai.engine.fetch_historical_ohlcv", return_value=mock_df), \
+         patch("python.ai.engine.compute_features", return_value=mock_features), \
+         patch("python.ai.engine.ensure_connected"), \
+         patch("python.ai.engine.write_symbol_params"):
+        engine.evaluate_symbol("EURUSD")
+
+    call_kwargs = mock_logger.log_decision.call_args.kwargs
+    assert call_kwargs["features"] == mock_features
+
+
+def test_engine_works_without_logger():
+    """Test 7: Engine does not crash when decision_logger is None."""
+    engine = AIEngine(symbols=["EURUSD"], decision_logger=None)
+
+    mock_df = _mock_df()
+
+    with patch("python.ai.engine.fetch_historical_ohlcv", return_value=mock_df), \
+         patch("python.ai.engine.compute_features", return_value={"adx_14": 30.0}), \
+         patch("python.ai.engine.ensure_connected"), \
+         patch("python.ai.engine.write_symbol_params"):
+        result = engine.evaluate_symbol("EURUSD")
+
+    assert result is not None
+
+
+def test_existing_engine_tests_still_pass():
+    """Test 8: Existing engine behavior unchanged — smoke test."""
+    engine = AIEngine(symbols=["EURUSD"])
+    assert engine.symbols == ["EURUSD"]
+    assert engine.timeframe == "H1"
+    assert engine.detector is not None
+    assert engine.adapter is not None
+    assert engine.decision_logger is None

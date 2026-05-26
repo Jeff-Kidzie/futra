@@ -3,6 +3,7 @@
 Per ARCHITECTURE.md Pattern 3: Async service loop at configurable evaluation intervals.
 Per AI-01: Classifies regime per symbol per timeframe.
 Per AI-02: Adapts SL/TP and position sizing based on regime and volatility.
+Per AI-04: Logs every parameter decision with full context.
 """
 import logging
 
@@ -13,6 +14,7 @@ from ..ipc.ipc_writer import write_symbol_params
 from .features import compute_features
 from .regime_detector import RegimeDetector
 from .parameter_adapter import ParameterAdapter
+from .decision_logger import DecisionLogger
 
 
 class AIEngine:
@@ -24,11 +26,13 @@ class AIEngine:
         timeframe: str = "H1",
         regime_detector: RegimeDetector | None = None,
         parameter_adapter: ParameterAdapter | None = None,
+        decision_logger: DecisionLogger | None = None,
     ):
         self.symbols = symbols or DEFAULT_SYMBOLS
         self.timeframe = timeframe
         self.detector = regime_detector or RegimeDetector()
         self.adapter = parameter_adapter or ParameterAdapter()
+        self.decision_logger = decision_logger  # None → logging disabled
         self.logger = logging.getLogger(__name__)
 
     def evaluate_symbol(self, symbol: str) -> dict | None:
@@ -76,6 +80,23 @@ class AIEngine:
                 f"sl={adapted['sl_pips']}pips tp={adapted['tp_pips']}pips "
                 f"lot={adapted['lot_size']}"
             )
+
+            # 7. Log AI decision (per AI-04)
+            if self.decision_logger is not None:
+                try:
+                    self.decision_logger.log_decision(
+                        symbol=symbol,
+                        regime=regime,
+                        confidence=confidence,
+                        sl_pips=adapted["sl_pips"],
+                        tp_pips=adapted["tp_pips"],
+                        lot_size=adapted["lot_size"],
+                        volatility=volatility,
+                        atr=atr_pips,
+                        features=features,
+                    )
+                except Exception as e:
+                    self.logger.warning(f"Failed to log decision for {symbol}: {e}")
 
             return {
                 "symbol": symbol,
