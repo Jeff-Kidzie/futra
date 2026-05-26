@@ -93,12 +93,22 @@ Cross-cutting constraints:
   3. AI decision log displays regime, confidence, parameters chosen, and reasoning per trade
   4. Equity curve and drawdown charts visualize account performance over time
   5. Dashboard is accessible from anywhere via internet with authentication and HTTPS
-**Plans**: 2 plans
-**UI hint**: yes
+**Plans**: 3 plans in 3 waves
 
-Plans:
-- [ ] 04-01: Dashboard backend and frontend views — positions, trade history, AI decisions, equity curve, drawdown charts
-- [ ] 04-02: Push notifications, internet accessibility, authentication, and HTTPS
+**Wave 1**:
+- [ ] 04-01-PLAN.md — FastAPI dashboard backend: auth, REST API, WebSocket, alert monitoring, SQLite database
+
+**Wave 2** *(blocked on Wave 1 completion)*:
+- [ ] 04-02-PLAN.md — SvelteKit dashboard frontend: project config, 7 pages, charts, shadcn-svelte components
+
+**Wave 3** *(blocked on Wave 1 + Wave 2 completion)*:
+- [ ] 04-03-PLAN.md — Production deployment: Caddy HTTPS reverse proxy, Windows VPS startup scripts, firewall, .env.example
+
+Cross-cutting constraints:
+- API contract (REST endpoints + WebSocket protocol) defined in 04-01, consumed by 04-02 (API client + stores) and 04-03 (Caddy reverse proxy)
+- Frontend build output (frontend/build/) defined in 04-02, consumed by 04-03 (StaticFiles mount)
+- Auth token format (Bearer token in Authorization header) defined in 04-01, consumed by 04-02 (api.ts fetch wrapper) and 04-03 (Caddy security headers)
+- Caddy reverse proxy (04-03) routes all traffic to FastAPI — both 04-01 and 04-02 must be complete before deployment
 
 ## Progress
 
@@ -110,4 +120,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation + Safety | 3/3 | Complete | 2026-05-24 |
 | 2. AI Engine | 0/2 | Not started | - |
 | 3. Validation | 0/2 | Not started | - |
-| 4. Monitoring Dashboard | 0/2 | Not started | - |
+| 4. Monitoring Dashboard | 0/3 | Not started | - |
