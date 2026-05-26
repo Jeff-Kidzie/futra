@@ -69,11 +69,19 @@ Cross-cutting constraints:
   2. Performance analytics reports Sharpe ratio, Sortino ratio, max drawdown, profit factor, win rate, and average win/loss
   3. Walk-forward validation confirms strategy generalizes with out-of-sample testing
   4. Paper trading runs on MT5 demo account with real-time signal generation but no live orders
-**Plans**: 2 plans
+**Plans**: 2 plans in 2 waves
 
-Plans:
-- [ ] 03-01: Backtesting engine and analytics — historical replay with realistic costs, performance metrics
-- [ ] 03-02: Walk-forward validation, Monte Carlo simulation, and paper trading mode
+**Wave 1**:
+- [ ] 03-01-PLAN.md — Cost models, backtesting engine (bar-level EA simulation), and performance metrics (Sharpe, Sortino, drawdown, profit factor)
+
+**Wave 2** *(blocked on Wave 1 completion)*:
+- [ ] 03-02-PLAN.md — Walk-forward validation, Monte Carlo simulation, and paper trading mode
+
+Cross-cutting constraints:
+- Backtester interface (Backtester.run()) defined in 03-01, consumed by 03-02 (WalkForward, MonteCarlo)
+- Metrics interface (compute_all_metrics()) defined in 03-01, consumed by 03-02
+- Cost model classes (FixedSpreadModel, PerLotCommissionModel, FixedSlippageModel) defined in 03-01, consumed by 03-01 backtester
+- PaperTrader depends on AIEngine from Phase 2 — requires Phase 2 completion before paper trading execution
 
 ### Phase 4: Monitoring Dashboard
 **Goal**: Trading activity and AI decisions are visible from anywhere through an authenticated web dashboard with real-time updates and push alerts
