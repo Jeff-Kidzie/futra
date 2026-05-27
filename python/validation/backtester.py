@@ -190,7 +190,7 @@ class Backtester:
             # 1. Process open positions — check SL/TP
             for pos in self.positions[:]:  # Copy list for safe removal
                 exit_price = self._check_sl_tp(pos, bar)
-                if exit_price:
+                if exit_price is not None:
                     # Close position
                     pnl = self._compute_pnl(pos, exit_price)
                     # Apply commission for exit side
