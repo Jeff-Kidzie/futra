@@ -283,9 +283,10 @@ class Backtester:
             # Equity = cash + realized P&L. No unrealized P&L tracking for simplicity.
             self.equity_curve.append((timestamp, self.equity))
             
-            # 6. Increment bars_held for open positions
+            # 6. Increment bars_held for open positions (skip positions opened this bar)
             for pos in self.positions:
-                pos["bars_held"] += 1
+                if pos["bars_held"] > 0 or pos["entry_time"] != timestamp:
+                    pos["bars_held"] += 1
         
         # Close any remaining open positions at last bar's close
         for pos in self.positions[:]:
