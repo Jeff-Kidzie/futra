@@ -161,15 +161,26 @@ def test_pass_fail_thresholds_enforced(multi_year_ohlcv):
     class GoodBacktester:
         def run(self, df, symbol, detector, adapter, features_fn):
             n_t = max(1, len(df) // 40)
-            trades = [{"profit_loss": 15.0, "symbol": symbol} for _ in range(n_t)]
-            eq = list(zip(range(len(df)), np.linspace(10000, 10000 + n_t * 5, len(df))))
+            # Profit factor > 1.2: 80% wins at +40, 20% losses at -10
+            n_wins = int(n_t * 0.8)
+            n_losses = n_t - n_wins
+            trades = [{"profit_loss": 40.0, "symbol": symbol} for _ in range(n_wins)]
+            trades += [{"profit_loss": -10.0, "symbol": symbol} for _ in range(n_losses)]
+            # Noisy upward equity curve for positive Sharpe
+            np.random.seed(99)
+            returns = np.random.randn(len(df)) * 30 + 50  # mean ~50, std ~30
+            equity_vals = 10000 + np.cumsum(returns)
+            equity_vals = np.clip(equity_vals, 5000, None)  # prevent < 0
+            eq = list(zip(range(len(df)), equity_vals))
             return {"trades": trades, "equity_curve": eq, "final_equity": eq[-1][1]}
 
     class BadBacktester:
         def run(self, df, symbol, detector, adapter, features_fn):
             n_t = max(1, len(df) // 40)
-            trades = [{"profit_loss": -5.0, "symbol": symbol} for _ in range(n_t)]
-            eq = list(zip(range(len(df)), np.linspace(10000, 10000 - n_t * 5, len(df))))
+            trades = [{"profit_loss": -15.0, "symbol": symbol} for _ in range(n_t)]
+            # Declining equity curve
+            equity_vals = np.linspace(10000, 9000, len(df))
+            eq = list(zip(range(len(df)), equity_vals))
             return {"trades": trades, "equity_curve": eq, "final_equity": eq[-1][1]}
 
     wf = WalkForward(in_sample_years=2, out_of_sample_months=6)
@@ -178,5 +189,5 @@ def test_pass_fail_thresholds_enforced(multi_year_ohlcv):
     bad_result = wf.run(multi_year_ohlcv, "EURUSD", BadBacktester(), None, None, lambda df: {})
 
     # Good should pass, bad should not
-    assert good_result["passed"] is True
-    assert bad_result["passed"] is False
+    assert good_result["passed"] == True, f"Good should pass: agg={good_result['aggregate']}"
+    assert bad_result["passed"] == False, f"Bad should fail: agg={bad_result['aggregate']}"
