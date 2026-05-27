@@ -292,6 +292,9 @@ class Backtester:
             last_bar = bars.iloc[-1]
             exit_price = last_bar["close"]
             pnl = self._compute_pnl(pos, exit_price)
+            exit_commission = self.commission_model.get_commission(
+                symbol, pos["lot_size"], pos["direction"])
+            pnl -= exit_commission
             self._close_position(pos, exit_price, pnl,
                                 last_bar.get("time", None), "end_of_test")
         
