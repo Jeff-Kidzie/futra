@@ -80,15 +80,16 @@ def compute_sortino_ratio(
     rf_daily = risk_free_rate / trading_periods_per_year
     excess = np.mean(returns) - rf_daily
     
-    # Downside deviation: only returns below 0 (or below target)
-    downside_returns = returns[returns < 0]
-    if len(downside_returns) == 0 or np.std(downside_returns) == 0:
+    # Correct downside deviation: sqrt(mean(min(0, r)^2)) over ALL returns
+    downside_diffs = np.minimum(returns, 0)
+    downside_deviation = np.sqrt(np.mean(downside_diffs ** 2))
+    
+    if downside_deviation == 0:
         return 0.0 if excess <= 0 else float('inf')
     
-    downside_std = np.std(downside_returns)
     annual_factor = np.sqrt(trading_periods_per_year)
     
-    return (excess / downside_std) * annual_factor
+    return (excess / downside_deviation) * annual_factor
 
 
 def compute_max_drawdown(equity_curve: list[tuple]) -> float:
