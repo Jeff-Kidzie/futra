@@ -96,6 +96,8 @@ class MonteCarlo:
         n_trades = len(trades)
         final_equities = np.zeros(self.iterations)
         max_drawdowns = np.zeros(self.iterations)
+        mc_sharpe_values = np.zeros(self.iterations)
+        mc_pf_values = np.zeros(self.iterations)
         profitable = 0
         
         for i in range(self.iterations):
@@ -107,7 +109,7 @@ class MonteCarlo:
             equity_curve = self._reconstruct_equity(sampled_trades)
             equity_values = np.array([e[1] for e in equity_curve])
             
-            # Metrics
+            # Equity metrics
             final_equities[i] = equity_values[-1]
             
             # Max drawdown
@@ -118,27 +120,8 @@ class MonteCarlo:
             # Profitability
             if equity_values[-1] > self.initial_equity:
                 profitable += 1
-        
-        # CIP: Confidence in Profitability
-        cip = profitable / self.iterations
-        
-        # Daily returns approximation (treat each trade as a "day")
-        returns = np.array([t["profit_loss"] for t in trades])
-        mean_return = np.mean(returns) / self.initial_equity if len(returns) > 0 else 0
-        std_return = np.std(returns) / self.initial_equity if len(returns) > 0 else 0
-        mc_sharpes = mean_return / std_return * np.sqrt(252) if std_return > 0 else 0
-        
-        # Profit factor
-        profits = sum(t["profit_loss"] for t in trades if t["profit_loss"] > 0)
-        losses = abs(sum(t["profit_loss"] for t in trades if t["profit_loss"] < 0))
-        mc_pf = profits / losses if losses > 0 else float('inf')
-        
-        # For Sharpe and PF, generate distributions across bootstraps
-        mc_sharpe_values = np.zeros(self.iterations)
-        mc_pf_values = np.zeros(self.iterations)
-        
-        for i in range(self.iterations):
-            indices = self.rng.randint(0, n_trades, size=n_trades)
+            
+            # Sharpe and PF from same bootstrap sample
             bt_returns = np.array([trades[idx]["profit_loss"] for idx in indices]) / self.initial_equity
             bt_mean = np.mean(bt_returns)
             bt_std = np.std(bt_returns)
@@ -147,6 +130,9 @@ class MonteCarlo:
             bt_profits = sum(trades[idx]["profit_loss"] for idx in indices if trades[idx]["profit_loss"] > 0)
             bt_losses = abs(sum(trades[idx]["profit_loss"] for idx in indices if trades[idx]["profit_loss"] < 0))
             mc_pf_values[i] = bt_profits / bt_losses if bt_losses > 0 else float('inf')
+        
+        # CIP: Confidence in Profitability
+        cip = profitable / self.iterations
         
         return {
             "iterations": self.iterations,
