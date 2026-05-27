@@ -237,7 +237,7 @@ class Backtester:
                         entry_price_raw = bar["close"]
                         direction = "buy"  # Always long for initial backtest
                         
-                        adjusted_entry, _, _ = apply_costs(
+                        adjusted_entry, _, _, _ = apply_costs(
                             entry_price=entry_price_raw,
                             exit_price=entry_price_raw,  # Not used for entry calc
                             symbol=symbol,

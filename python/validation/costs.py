@@ -117,14 +117,15 @@ def apply_costs(entry_price: float, exit_price: float, symbol: str,
                 spread_model: SpreadModel,
                 commission_model: CommissionModel,
                 slippage_model: SlippageModel,
-                timestamp=None, ohlcv_df=None) -> tuple[float, float, float]:
+                timestamp=None, ohlcv_df=None) -> tuple[float, float, float, float]:
     """Apply trading costs to entry and exit prices.
     
-    Returns: (adjusted_entry, adjusted_exit, total_costs)
+    Returns: (adjusted_entry, adjusted_exit, total_costs_price, total_costs_currency)
     
     Entry: price + half_spread + slippage (cost of opening)
     Exit: price - half_spread (cost of closing)
-    Total costs: spread + slippage + commission in account currency
+    total_costs_price: spread + slippage in price units
+    total_costs_currency: commission in account currency
     """
     spread = spread_model.get_spread(symbol, timestamp, ohlcv_df)
     half_spread = spread / 2.0
@@ -143,5 +144,6 @@ def apply_costs(entry_price: float, exit_price: float, symbol: str,
     
     commission = commission_model.get_commission(symbol, volume, direction) * 2.0  # both sides
     
-    total_costs = spread + slippage_price + commission
-    return (adjusted_entry, adjusted_exit, total_costs)
+    total_costs_price = spread + slippage_price  # in price units
+    total_costs_currency = commission             # in account currency
+    return (adjusted_entry, adjusted_exit, total_costs_price, total_costs_currency)

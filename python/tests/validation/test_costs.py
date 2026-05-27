@@ -156,14 +156,15 @@ class TestApplyCosts:
         """apply_costs() with buy direction:
         Entry: price + half_spread + slippage
         Exit: price - half_spread
-        Total: spread + commission + slippage in price units (mixed dimension)
+        total_costs_price: spread + slippage in price units
+        total_costs_currency: commission in account currency
         """
         entry = 1.08000
         exit_price = 1.08500
         symbol = "EURUSD"
         volume = 1.0
         
-        adj_entry, adj_exit, total_costs = apply_costs(
+        adj_entry, adj_exit, total_costs_price, total_costs_currency = apply_costs(
             entry_price=entry,
             exit_price=exit_price,
             symbol=symbol,
@@ -180,11 +181,13 @@ class TestApplyCosts:
         # Adj entry buy: 1.08000 + 0.00005 + 0.00005 = 1.08010
         # Adj exit buy: 1.08500 - 0.00005 = 1.08495
         # Commission: 7.0 / 2 * 1.0 * 2 (both sides) = 7.0
-        # Total costs: 0.0001 + 0.00005 + 7.0
+        # total_costs_price: 0.0001 + 0.00005 = 0.00015 (price units)
+        # total_costs_currency: 7.0 (account currency)
         
         assert adj_entry == pytest.approx(1.08010, abs=1e-10)
         assert adj_exit == pytest.approx(1.08495, abs=1e-10)
-        assert total_costs == pytest.approx(0.0001 + 0.00005 + 7.0, abs=1e-10)
+        assert total_costs_price == pytest.approx(0.0001 + 0.00005, abs=1e-10)
+        assert total_costs_currency == pytest.approx(7.0, abs=1e-10)
     
     def test_apply_costs_sell_direction(self):
         """apply_costs() with sell direction:
@@ -196,7 +199,7 @@ class TestApplyCosts:
         symbol = "EURUSD"
         volume = 1.0
         
-        adj_entry, adj_exit, total_costs = apply_costs(
+        adj_entry, adj_exit, total_costs_price, total_costs_currency = apply_costs(
             entry_price=entry,
             exit_price=exit_price,
             symbol=symbol,
@@ -218,7 +221,7 @@ class TestApplyCosts:
 
     def test_apply_costs_zero_costs(self):
         """With zero spread, commission, and slippage, prices are unchanged."""
-        adj_entry, adj_exit, total_costs = apply_costs(
+        adj_entry, adj_exit, total_costs_price, total_costs_currency = apply_costs(
             entry_price=1.08000,
             exit_price=1.08500,
             symbol="EURUSD",
@@ -231,4 +234,5 @@ class TestApplyCosts:
         
         assert adj_entry == pytest.approx(1.08000, abs=1e-10)
         assert adj_exit == pytest.approx(1.08500, abs=1e-10)
-        assert total_costs == pytest.approx(0.0, abs=1e-10)
+        assert total_costs_price == pytest.approx(0.0, abs=1e-10)
+        assert total_costs_currency == pytest.approx(0.0, abs=1e-10)
