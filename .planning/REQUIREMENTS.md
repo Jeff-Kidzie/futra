@@ -39,9 +39,9 @@
 
 - [ ] **BACK-01**: Backtesting engine replays historical data through the AI + EA pipeline with realistic spread and commission modeling
 - [ ] **BACK-02**: Performance analytics: Sharpe ratio, Sortino ratio, max drawdown, profit factor, win rate, average win/loss
-- [ ] **BACK-03**: Walk-forward optimization using in-sample training and out-of-sample validation windows
-- [ ] **BACK-04**: Monte Carlo simulation tests strategy robustness across randomized trade sequences
-- [ ] **BACK-05**: Paper trading mode on MT5 demo account with real-time signal generation but no live orders
+- [x] **BACK-03**: Walk-forward optimization using in-sample training and out-of-sample validation windows
+- [x] **BACK-04**: Monte Carlo simulation tests strategy robustness across randomized trade sequences
+- [x] **BACK-05**: Paper trading mode on MT5 demo account with real-time signal generation but no live orders
 
 ### Web Dashboard
 
@@ -113,11 +113,11 @@
 | AI-04 | Phase 2: AI Engine | Complete |
 | AI-05 | Phase 2: AI Engine | Complete |
 | RISK-06 | Phase 2: AI Engine | Complete |
-| BACK-01 | Phase 3: Validation | Pending |
-| BACK-02 | Phase 3: Validation | Pending |
-| BACK-03 | Phase 3: Validation | Pending |
-| BACK-04 | Phase 3: Validation | Pending |
-| BACK-05 | Phase 3: Validation | Pending |
+| BACK-01 | Phase 3: Validation | Complete |
+| BACK-02 | Phase 3: Validation | Complete |
+| BACK-03 | Phase 3: Validation | Complete |
+| BACK-04 | Phase 3: Validation | Complete |
+| BACK-05 | Phase 3: Validation | Complete |
 | DASH-01 | Phase 4: Monitoring Dashboard | Pending |
 | DASH-02 | Phase 4: Monitoring Dashboard | Pending |
 | DASH-03 | Phase 4: Monitoring Dashboard | Pending |

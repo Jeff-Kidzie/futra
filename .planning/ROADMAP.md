@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation + Safety** - EA executes trades on MT5 with kill switch, safe defaults, data pipeline, and risk circuit breakers
 - [x] **Phase 2: AI Engine** - Regime detection adapts SL/TP and position sizing based on market conditions (completed 2026-05-26)
-- [ ] **Phase 3: Validation** - Backtesting and paper trading prove the system works before live capital
+- [x] **Phase 3: Validation** - Backtesting and paper trading prove the system works before live capital
 - [ ] **Phase 4: Monitoring Dashboard** - Trading activity and AI decisions visible from anywhere via authenticated web dashboard
 
 ## Phase Details
@@ -75,7 +75,7 @@ Cross-cutting constraints:
 - [x] 03-01-PLAN.md — Cost models, backtesting engine (bar-level EA simulation), and performance metrics (Sharpe, Sortino, drawdown, profit factor) (completed 2026-05-27)
 
 **Wave 2** *(blocked on Wave 1 completion)*:
-- [ ] 03-02-PLAN.md — Walk-forward validation, Monte Carlo simulation, and paper trading mode
+- [x] 03-02-PLAN.md — Walk-forward validation, Monte Carlo simulation, and paper trading mode (completed 2026-05-27)
 
 Cross-cutting constraints:
 - Backtester interface (Backtester.run()) defined in 03-01, consumed by 03-02 (WalkForward, MonteCarlo)
@@ -119,5 +119,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation + Safety | 3/3 | Complete | 2026-05-24 |
 | 2. AI Engine | 2/2 | Complete   | 2026-05-26 |
-| 3. Validation | 1/2 | In progress | - |
+| 3. Validation | 2/2 | Complete | 2026-05-27 |
 | 4. Monitoring Dashboard | 0/3 | Not started | - |

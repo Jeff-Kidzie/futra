@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-last_updated: "2026-05-27T05:52:16.000Z"
-last_activity: "2026-05-27 — Phase 3 Plan 01 complete (Cost Models, Backtester, Metrics). Plan 02 remaining."
+last_updated: "2026-05-27T05:58:51.000Z"
+last_activity: "2026-05-27 — Phase 3 Plan 02 complete (Walk-Forward, Monte Carlo, Paper Trading). Phase 3 complete, ready for Phase 4."
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 10
-  completed_plans: 6
-  percent: 60
+  completed_plans: 7
+  percent: 70
 ---
 
 # Project State
@@ -20,23 +20,23 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-23)
 
 **Core value:** Consistent profit with manageable drawdowns — the system must deliver steady returns while keeping risk under control
-**Current focus:** Phase 2 COMPLETE — Phase 3 (Validation) in progress
+**Current focus:** Phase 3 COMPLETE — Phase 4 (Monitoring Dashboard) next
 
 ## Current Position
 
-Phase: 3 of 4 (Validation) — IN PROGRESS
-Plans: 1/2 complete
-Status: Wave 1 complete (Cost models, Backtester, Metrics). Ready for Wave 2.
+Phase: 3 of 4 (Validation) — COMPLETE
+Plans: 2/2 complete
+Status: All validation components complete (Cost models, Backtester, Metrics, Walk-Forward, Monte Carlo, Paper Trading).
 
-Progress: [██████░░░░] 60%
+Progress: [███████░░░] 70%
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 6
-- Average duration: ~12 min
-- Total execution time: ~85 min
+- Total plans completed: 7
+- Average duration: ~11 min
+- Total execution time: ~89 min
 
 **By Phase:**
 
@@ -44,7 +44,7 @@ Progress: [██████░░░░] 60%
 |-------|-------|-------|----------|
 | 1. Foundation + Safety | 3/3 | — | — |
 | 2. AI Engine | 2/2 | ~25 min | ~12 min |
-| 3. Validation | 1/2 | ~10 min | — |
+| 3. Validation | 2/2 | ~14 min | ~7 min |
 | 4. Monitoring Dashboard | 0/3 | — | — |
 
 **Recent Trend:**
@@ -67,6 +67,9 @@ Recent decisions affecting current work:
 - SL/TP both-hit tiebreaker uses bar direction
 - Commission charged per side (entry + exit)
 - Metrics use numpy only — no external financial library
+- Walk-forward uses anchored expanding windows (IS grows, OOS fixed 6mo) — maximizes training data per window
+- Monte Carlo returns distribution stats without explicit pass/fail — caller interprets CIP against own thresholds
+- PaperTrader is intentionally thin scheduler — delegates all evaluation to AIEngine.run_once()
 
 ### Pending Todos
 
@@ -89,5 +92,5 @@ Items acknowledged and carried forward from previous milestone close:
 ## Session Continuity
 
 Last session: 2026-05-27
-Stopped at: Phase 3 Plan 01 complete (Cost Models, Backtester, Metrics)
-Resume file: .planning/phases/03-validation/03-01-SUMMARY.md
+Stopped at: Phase 3 Plan 02 complete (Walk-Forward, Monte Carlo, Paper Trading)
+Resume file: .planning/phases/03-validation/03-02-SUMMARY.md
