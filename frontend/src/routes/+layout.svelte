@@ -2,15 +2,27 @@
 	import '../app.css';
 	import { page } from '$app/stores';
 	import { isAuthenticated } from '$lib/stores';
+	import { connectWebSocket, disconnectWebSocket } from '$lib/ws';
 	import Nav from '$lib/components/Nav.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 
 	let { children } = $props();
+	let unsubscribeAuth: (() => void) | null = null;
 
 	onMount(() => {
 		const token = localStorage.getItem('futra_token');
 		isAuthenticated.set(!!token);
+
+		unsubscribeAuth = isAuthenticated.subscribe((authed) => {
+			if (authed) connectWebSocket();
+			else disconnectWebSocket();
+		});
+	});
+
+	onDestroy(() => {
+		unsubscribeAuth?.();
+		disconnectWebSocket();
 	});
 </script>
 
