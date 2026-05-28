@@ -47,3 +47,51 @@ AI_LOG_DIR = Path(os.getenv("FUTRA_AI_LOG_DIR", str(Path(__file__).parent / "ai"
 AI_STRATEGY_DIR = Path(os.getenv("FUTRA_AI_STRATEGY_DIR", str(Path(__file__).parent / "ai" / "strategies")))
 AI_DEFAULT_TIMEFRAME = os.getenv("FUTRA_AI_TIMEFRAME", "H1")
 AI_DEFAULT_EQUITY = float(os.getenv("FUTRA_AI_EQUITY", "10000.0"))
+
+
+# --- Validation Configuration ---
+
+# Backtesting
+DEFAULT_INITIAL_EQUITY = float(os.getenv("FUTRA_BACKTEST_EQUITY", "10000.0"))
+DEFAULT_BACKTEST_TIMEFRAME = os.getenv("FUTRA_BACKTEST_TIMEFRAME", "H1")
+
+# Costs — per-symbol spread in pips
+DEFAULT_SPREAD_PIPS = {
+    "EURUSD": 1.0, "GBPUSD": 1.5, "USDJPY": 1.5,
+    "USDCHF": 1.5, "AUDUSD": 1.5, "NZDUSD": 2.0,
+    "USDCAD": 1.5, "EURGBP": 2.0, "EURJPY": 2.0,
+    "GBPJPY": 3.0, "XAUUSD": 20.0,
+}
+
+# Commission per lot in account currency ($7 per lot round-turn = typical retail)
+COMMISSION_PER_LOT = float(os.getenv("FUTRA_COMMISSION_PER_LOT", "7.0"))
+
+# Slippage in pips
+SLIPPAGE_PIPS_MAJORS = float(os.getenv("FUTRA_SLIPPAGE_MAJORS", "0.5"))
+SLIPPAGE_PIPS_MINORS = float(os.getenv("FUTRA_SLIPPAGE_MINORS", "1.0"))
+
+# Walk-forward
+WF_IN_SAMPLE_YEARS = int(os.getenv("FUTRA_WF_INSAMPLE_YEARS", "2"))
+WF_OUT_OF_SAMPLE_MONTHS = int(os.getenv("FUTRA_WF_OOS_MONTHS", "6"))
+WF_MIN_OOS_TRADES = int(os.getenv("FUTRA_WF_MIN_TRADES", "10"))
+
+# Monte Carlo
+MC_ITERATIONS = int(os.getenv("FUTRA_MC_ITERATIONS", "2000"))
+MC_CONFIDENCE_LEVEL = float(os.getenv("FUTRA_MC_CONFIDENCE", "0.95"))
+
+# Paper trading
+PAPER_TRADING_INTERVAL_SECONDS = int(os.getenv("FUTRA_PAPER_INTERVAL", "3600"))
+MT5_DEMO_LOGIN = int(os.getenv("MT5_DEMO_LOGIN", "0"))
+MT5_DEMO_PASSWORD = os.getenv("MT5_DEMO_PASSWORD", "")
+MT5_DEMO_SERVER = os.getenv("MT5_DEMO_SERVER", "")
+
+# Pip size per symbol (difference between 1 pip in price units)
+# Standard: Forex pairs quoted to 4 decimal places → pip = 0.0001
+# JPY pairs quoted to 2 decimal places → pip = 0.01
+# Gold (XAUUSD) → pip = 0.10
+PIP_SIZE = {
+    "EURUSD": 0.0001, "GBPUSD": 0.0001, "USDJPY": 0.01,
+    "USDCHF": 0.0001, "AUDUSD": 0.0001, "NZDUSD": 0.0001,
+    "USDCAD": 0.0001, "EURGBP": 0.0001, "EURJPY": 0.01,
+    "GBPJPY": 0.01, "XAUUSD": 0.10,
+}
