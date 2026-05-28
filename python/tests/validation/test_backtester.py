@@ -125,12 +125,33 @@ def test_run_returns_expected_keys(backtester, sample_ohlcv, mock_detector, mock
 
 # ── Test 2: Flat market produces zero-or-negative P&L before costs ──────────
 
-def test_flat_market_zero_or_negative_pnl(backtester, sample_ohlcv, mock_detector, mock_adapter, mock_features):
-    """With near-flat prices, total P&L should be non-positive (costs drain)."""
-    result = backtester.run(sample_ohlcv, "EURUSD", mock_detector, mock_adapter, mock_features)
+def test_flat_market_zero_or_negative_pnl(mock_detector, mock_adapter, mock_features):
+    """With truly flat prices, total P&L should be non-positive (costs drain)."""
+    # Build a truly flat DataFrame — all bars at same price, no drift
+    n = 200
+    np.random.seed(42)
+    dates = [datetime(2024, 1, 1) + timedelta(hours=i) for i in range(n)]
+    base = 1.085
+    df = pd.DataFrame({
+        "time": dates,
+        "open": np.full(n, base),
+        "high": np.full(n, base + 0.0003),
+        "low": np.full(n, base - 0.0003),
+        "close": np.full(n, base),
+        "tick_volume": np.ones(n) * 1000,
+        "spread": np.ones(n) * 10,
+    })
+    bt = Backtester(
+        initial_equity=10000.0,
+        max_drawdown_pct=0.50,
+        daily_loss_cap_pct=0.50,
+        max_positions_per_symbol=1,
+        max_bars_held=48,
+    )
+    result = bt.run(df, "EURUSD", mock_detector, mock_adapter, mock_features)
     total_pnl = sum(t["profit_loss"] for t in result["trades"])
     # Spread + commission makes it negative — verify it's not wildly positive
-    assert total_pnl <= 0
+    assert total_pnl <= 0, f"Expected non-positive P&L with flat prices, got {total_pnl}"
 
 
 # ── Test 3: Strong uptrend produces positive P&L ────────────────────────────
