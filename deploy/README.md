@@ -37,7 +37,7 @@ notepad .env
 ```
 
 **Required values to set:**
-- `FUTRA_MT5_LOGIN`, `FUTRA_MT5_PASSWORD`, `FUTRA_MT5_SERVER` — your MT5 credentials
+- `MT5_LOGIN`, `MT5_PASSWORD`, `MT5_SERVER` — your MT5 credentials
 - `FUTRA_DASHBOARD_DOMAIN` — your domain (e.g., `futra.duckdns.org`)
 - `FUTRA_SESSION_SECRET` — generate with `python -c "import secrets; print(secrets.token_hex(32))"`
 
