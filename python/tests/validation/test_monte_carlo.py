@@ -83,15 +83,22 @@ def test_iteration_count_matches_configured(positive_trades):
     assert result["iterations"] == 100
 
 
-# --- Test 7: Reshuffling produces different results (not all identical) ---
-def test_reshuffling_produces_variable_results(positive_trades):
+# --- Test 7: Reshuffling produces variable results (not all identical) ---
+def test_reshuffling_produces_variable_results():
     from python.validation.monte_carlo import MonteCarlo
+    # Use trades with varying profit/loss values so bootstrapping produces
+    # different distributions with different random seeds
+    np.random.seed(123)
+    variable_trades = [
+        {"profit_loss": float(v), "symbol": "EURUSD"}
+        for v in np.random.choice([100.0, 50.0, -20.0, 200.0, -80.0], size=50)
+    ]
     # Two runs with different seeds produce different equity distributions
     mc1 = MonteCarlo(iterations=200, random_seed=42)
     mc2 = MonteCarlo(iterations=200, random_seed=99)
-    result1 = mc1.run(positive_trades)
-    result2 = mc2.run(positive_trades)
-    # With different seeds, the mean final equity should differ slightly
+    result1 = mc1.run(variable_trades)
+    result2 = mc2.run(variable_trades)
+    # With different seeds and variable trades, final equity stats differ
     assert result1["final_equity"]["mean"] != result2["final_equity"]["mean"]
 
 
