@@ -72,7 +72,7 @@ Cross-cutting constraints:
 **Plans**: 2 plans in 2 waves
 
 **Wave 1**:
-- [ ] 03-01-PLAN.md — Cost models, backtesting engine (bar-level EA simulation), and performance metrics (Sharpe, Sortino, drawdown, profit factor)
+- [x] 03-01-PLAN.md — Cost models, backtesting engine (bar-level EA simulation), and performance metrics (Sharpe, Sortino, drawdown, profit factor)
 
 **Wave 2** *(blocked on Wave 1 completion)*:
 - [ ] 03-02-PLAN.md — Walk-forward validation, Monte Carlo simulation, and paper trading mode
@@ -119,5 +119,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation + Safety | 3/3 | Complete | 2026-05-24 |
 | 2. AI Engine | 2/2 | Complete   | 2026-05-26 |
-| 3. Validation | 0/2 | Not started | - |
+| 3. Validation | 1/2 | In Progress|  |
 | 4. Monitoring Dashboard | 0/3 | Not started | - |
