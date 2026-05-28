@@ -99,7 +99,7 @@ Cross-cutting constraints:
 - [x] 04-01-PLAN.md — FastAPI dashboard backend: auth, REST API, WebSocket, alert monitoring, SQLite database
 
 **Wave 2** *(blocked on Wave 1 completion)*:
-- [ ] 04-02-PLAN.md — SvelteKit dashboard frontend: project config, 7 pages, charts, shadcn-svelte components
+- [x] 04-02-PLAN.md — SvelteKit dashboard frontend: project config, 7 pages, charts, shadcn-svelte components
 
 **Wave 3** *(blocked on Wave 1 + Wave 2 completion)*:
 - [ ] 04-03-PLAN.md — Production deployment: Caddy HTTPS reverse proxy, Windows VPS startup scripts, firewall, .env.example
@@ -120,4 +120,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation + Safety | 3/3 | Complete | 2026-05-24 |
 | 2. AI Engine | 2/2 | Complete   | 2026-05-26 |
 | 3. Validation | 2/2 | Complete    | 2026-05-28 |
-| 4. Monitoring Dashboard | 1/3 | In Progress|  |
+| 4. Monitoring Dashboard | 2/3 | In Progress|  |
