@@ -5,7 +5,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
-from ..config import DASHBOARD_DEV_MODE, FRONTEND_BUILD_DIR
+from ..config import DASHBOARD_DEV_MODE, DASHBOARD_DOMAIN, FRONTEND_BUILD_DIR
 from .db import init_db, get_db
 from .auth import router as auth_router
 from .ws import manager
@@ -44,6 +44,14 @@ if DASHBOARD_DEV_MODE:
         allow_origins=["*"],
         allow_methods=["*"],
         allow_headers=["*"],
+    )
+else:
+    # Production: restrict CORS to the dashboard domain
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[f"https://{DASHBOARD_DOMAIN}"],
+        allow_methods=["GET", "POST", "PUT", "DELETE"],
+        allow_headers=["Authorization", "Content-Type"],
     )
 
 app.include_router(auth_router)

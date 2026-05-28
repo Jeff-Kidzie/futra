@@ -4,6 +4,7 @@ All values load from environment variables with sensible defaults.
 Per T-01-07: MT5 credentials stored in environment variables, never hardcoded.
 """
 import os
+import secrets
 from pathlib import Path
 
 
@@ -107,3 +108,16 @@ DAILY_LOSS_ALERT_THRESHOLD = float(os.getenv("FUTRA_DAILY_LOSS_ALERT", "500.0"))
 # AI log directory (Phase 2) — may not exist until Phase 2 is executed
 AI_LOG_DIR = Path(os.getenv("FUTRA_AI_LOG_DIR", "logs/ai"))
 STRATEGY_CONFIG_DIR = Path(os.getenv("FUTRA_STRATEGY_CONFIG_DIR", "configs/strategies"))
+
+
+# --- Production Deployment Configuration ---
+
+# Caddy/HTTPS domain (for production reverse proxy)
+DASHBOARD_DOMAIN = os.getenv("FUTRA_DASHBOARD_DOMAIN", "localhost")
+
+# Initial balance for equity curve computation (can be overridden per account)
+FUTRA_INITIAL_BALANCE = float(os.getenv("FUTRA_INITIAL_BALANCE", "10000.0"))
+
+# Session secret for token generation (override in production!)
+# If not set, a random secret is generated on startup (sessions invalidate on restart)
+SESSION_SECRET = os.getenv("FUTRA_SESSION_SECRET", secrets.token_hex(32))
