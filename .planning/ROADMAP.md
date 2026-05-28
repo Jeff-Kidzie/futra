@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Foundation + Safety** - EA executes trades on MT5 with kill switch, safe defaults, data pipeline, and risk circuit breakers
 - [x] **Phase 2: AI Engine** - Regime detection adapts SL/TP and position sizing based on market conditions (completed 2026-05-26)
 - [x] **Phase 3: Validation** - Backtesting and paper trading prove the system works before live capital (completed 2026-05-28)
-- [ ] **Phase 4: Monitoring Dashboard** - Trading activity and AI decisions visible from anywhere via authenticated web dashboard
+- [x] **Phase 4: Monitoring Dashboard** - Trading activity and AI decisions visible from anywhere via authenticated web dashboard (completed 2026-05-28)
 
 ## Phase Details
 
@@ -102,7 +102,7 @@ Cross-cutting constraints:
 - [x] 04-02-PLAN.md — SvelteKit dashboard frontend: project config, 7 pages, charts, shadcn-svelte components
 
 **Wave 3** *(blocked on Wave 1 + Wave 2 completion)*:
-- [ ] 04-03-PLAN.md — Production deployment: Caddy HTTPS reverse proxy, Windows VPS startup scripts, firewall, .env.example
+- [x] 04-03-PLAN.md — Production deployment: Caddy HTTPS reverse proxy, Windows VPS startup scripts, firewall, .env.example
 
 Cross-cutting constraints:
 - API contract (REST endpoints + WebSocket protocol) defined in 04-01, consumed by 04-02 (API client + stores) and 04-03 (Caddy reverse proxy)
@@ -120,4 +120,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation + Safety | 3/3 | Complete | 2026-05-24 |
 | 2. AI Engine | 2/2 | Complete   | 2026-05-26 |
 | 3. Validation | 2/2 | Complete    | 2026-05-28 |
-| 4. Monitoring Dashboard | 2/3 | In Progress|  |
+| 4. Monitoring Dashboard | 3/3 | Complete   | 2026-05-28 |
