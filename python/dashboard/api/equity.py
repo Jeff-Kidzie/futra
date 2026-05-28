@@ -48,10 +48,7 @@ def compute_equity_curve(
         today = datetime.now(timezone.utc).date().isoformat()
         return [{"time": today, "value": initial_balance}]
 
-    # Sort by timestamp ascending
-    closes.sort(key=lambda c: c.get("timestamp", ""))
-
-    # Build daily equity points
+    # Aggregate daily P&L from trade_close events
     equity_map: dict[str, float] = {}
     for close_entry in closes:
         try:
@@ -59,34 +56,36 @@ def compute_equity_curve(
             dt = datetime.fromisoformat(ts)
             day_key = dt.date().isoformat()
             profit = close_entry.get("profit", 0)
-            if day_key not in equity_map:
-                equity_map[day_key] = 0
-            equity_map[day_key] += profit
+            equity_map[day_key] = equity_map.get(day_key, 0) + profit
         except Exception:
             continue
 
-    # Compute running equity
-    equity = initial_balance
     today = datetime.now(timezone.utc).date()
     start_date = today - timedelta(days=days)
 
-    # Get sorted day keys within the window
-    sorted_days = sorted(equity_map.keys())
-    points: list[dict] = []
+    if not equity_map:
+        return [{"time": today.isoformat(), "value": initial_balance}]
 
-    # Fill days from start_date to today
-    current_date = start_date
+    # Walk from the earliest trade day forward, accumulating running equity from
+    # initial_balance. This ensures the window's first point reflects all prior
+    # P&L (bug fix: previously the curve restarted from initial_balance at
+    # start_date, ignoring trades older than the window).
+    first_trade_day = datetime.fromisoformat(min(equity_map.keys())).date()
+    walk_start = min(first_trade_day, start_date)
+
     equity_value = initial_balance
+    points: list[dict] = []
+    current_date = walk_start
     while current_date <= today:
         day_str = current_date.isoformat()
         if day_str in equity_map:
             equity_value += equity_map[day_str]
-        points.append({"time": day_str, "value": round(equity_value, 2)})
+        if current_date >= start_date:
+            points.append({"time": day_str, "value": round(equity_value, 2)})
         current_date += timedelta(days=1)
 
-    # If we have no trading data, fill with initial_balance
     if not points:
-        points = [{"time": today.isoformat(), "value": initial_balance}]
+        points = [{"time": today.isoformat(), "value": round(equity_value, 2)}]
 
     return points
 

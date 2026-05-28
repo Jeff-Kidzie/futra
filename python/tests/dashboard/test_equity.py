@@ -94,3 +94,27 @@ class TestEquityCurve:
         """Returns 401 without token."""
         response = client.get("/api/equity-curve")
         assert response.status_code == 401
+
+    def test_trades_before_window_are_accumulated(self, tmp_path):
+        """CR-02 regression: trades older than the requested window must still
+        be reflected in the curve's starting equity, not silently dropped."""
+        from datetime import datetime, timezone, timedelta
+        from python.dashboard.api.equity import compute_equity_curve
+
+        log_path = tmp_path / "trade_log.jsonl"
+        # One trade ~90 days ago (+500), one ~5 days ago (-100). With a 30-day
+        # window, only the -100 trade falls inside, but the curve must still
+        # show 10000 + 500 = 10500 before the -100, then 10400 after.
+        today = datetime.now(timezone.utc).date()
+        old = (today - timedelta(days=90)).isoformat() + "T10:00:00Z"
+        recent = (today - timedelta(days=5)).isoformat() + "T10:00:00Z"
+        with open(log_path, "w") as f:
+            f.write(json.dumps({"event": "trade_close", "ticket": 1, "profit": 500.0, "timestamp": old}) + "\n")
+            f.write(json.dumps({"event": "trade_close", "ticket": 2, "profit": -100.0, "timestamp": recent}) + "\n")
+
+        curve = compute_equity_curve(trade_log_path=log_path, initial_balance=10000.0, days=30)
+
+        # First point in window should reflect prior +500 trade
+        assert curve[0]["value"] == 10500.0, f"first point should include old trade, got {curve[0]}"
+        # Final point should reflect both trades: 10000 + 500 - 100 = 10400
+        assert curve[-1]["value"] == 10400.0, f"final point should include both trades, got {curve[-1]}"
