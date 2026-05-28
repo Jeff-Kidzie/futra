@@ -95,3 +95,15 @@ PIP_SIZE = {
     "USDCAD": 0.0001, "EURGBP": 0.0001, "EURJPY": 0.01,
     "GBPJPY": 0.01, "XAUUSD": 0.10,
 }
+
+# --- Dashboard Configuration ---
+DASHBOARD_DB_PATH = Path(os.getenv("FUTRA_DASHBOARD_DB", "dashboard.db"))
+DASHBOARD_DEV_MODE = os.getenv("FUTRA_DASHBOARD_DEV", "false").lower() == "true"
+FRONTEND_BUILD_DIR = Path(os.getenv("FUTRA_FRONTEND_DIR", "frontend/build"))
+SESSION_EXPIRY_HOURS = int(os.getenv("FUTRA_SESSION_EXPIRY_HOURS", "24"))
+DASHBOARD_POLL_INTERVAL = float(os.getenv("FUTRA_DASHBOARD_POLL", "1.0"))
+DRAWDOWN_ALERT_THRESHOLD = float(os.getenv("FUTRA_DRAWDOWN_ALERT_PCT", "10.0"))
+DAILY_LOSS_ALERT_THRESHOLD = float(os.getenv("FUTRA_DAILY_LOSS_ALERT", "500.0"))
+# AI log directory (Phase 2) — may not exist until Phase 2 is executed
+AI_LOG_DIR = Path(os.getenv("FUTRA_AI_LOG_DIR", "logs/ai"))
+STRATEGY_CONFIG_DIR = Path(os.getenv("FUTRA_STRATEGY_CONFIG_DIR", "configs/strategies"))
