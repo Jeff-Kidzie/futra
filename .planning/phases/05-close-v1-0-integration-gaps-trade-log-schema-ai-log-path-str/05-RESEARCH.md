@@ -1076,32 +1076,32 @@ def test_instance_multipliers_independent():
 
 **Confirm-before-execution items (from this log):** A2 (MT5 POSITION_PROFIT timing) — recommend that the planner add a "manual gate" test step where the operator runs the recompiled EA on demo MT5 and confirms a known-profit close lands in `trade_log.jsonl` with the right `profit` field. A8 (Pydantic extras) — planner should add an explicit `assert response.status_code == 200` integration test against a writer-emitted record to surface this if it bites.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Should `trade_modify` events be filtered out of `trade_log.jsonl` entirely, or emitted as informational rows?**
+1. **RESOLVED:** **Should `trade_modify` events be filtered out of `trade_log.jsonl` entirely, or emitted as informational rows?**
    - What we know: `trades.py:36-40` filters by `event ∈ {trade_open, trade_close}`. Modify rows are silently ignored — current correct behavior.
    - What's unclear: operators may want to grep modify events for SL/TP adjustment debugging.
    - Recommendation: keep emitting `trade_modify` rows (with `event: "trade_modify"`); dashboard ignores them. Cost is one extra line per modify, benefit is unchanged operator workflow.
 
-2. **Should `LogError` rows also gain an `event: "error"` field for filter symmetry?**
+2. **RESOLVED:** **Should `LogError` rows also gain an `event: "error"` field for filter symmetry?**
    - What we know: Phase 4 readers don't filter on errors today. Errors are emitted on the same `trade_log.jsonl` file (Logger.mqh:61-85).
    - What's unclear: future dashboards may want an error-row endpoint.
    - Recommendation: add `event: "error"` for forward-compatibility. Zero cost, prevents future contract mismatch.
 
-3. **Is the audit's `WR-05` (Phase 4) the same as G3, and does closing G3 close WR-05?**
+3. **RESOLVED:** **Is the audit's `WR-05` (Phase 4) the same as G3, and does closing G3 close WR-05?**
    - What we know: WR-05 (04-REVIEW.md:286-300) is verbatim G3. Yes, closing G3 closes WR-05.
    - Recommendation: have `/gsd-complete-milestone v1.0` mark both as closed; no separate fix needed.
 
-4. **Should G5's `enable_decision_log: bool` parameter default to True (recommended) or be a global env-var flag (`FUTRA_AI_LOG_ENABLED`)?**
+4. **RESOLVED:** **Should G5's `enable_decision_log: bool` parameter default to True (recommended) or be a global env-var flag (`FUTRA_AI_LOG_ENABLED`)?**
    - What we know: Test code (`test_engine_works_without_logger`) explicitly tests the None path.
    - What's unclear: which production operator preference. Phase 1 / 2 docs don't address this.
    - Recommendation: bool parameter default-True. Env var is over-engineering for v1.0; if a future operator wants global disable, add it in v1.1 without API change (just intercept in __init__).
 
-5. **Does the planner want to include G7 (FUTRA_INITIAL_BALANCE wiring) in Phase 5 or defer to v1.1?**
+5. **RESOLVED:** **Does the planner want to include G7 (FUTRA_INITIAL_BALANCE wiring) in Phase 5 or defer to v1.1?**
    - What we know: Audit flags G7 as warning, not blocker. Fix is ~5 lines in `equity.py`. Phase brief says "Optional inclusion if low-cost; flag explicitly."
    - Recommendation: include in Wave B as task B4. Low cost, closes a documented gap, no risk of scope creep.
 
-6. **Does the planner want to include G6 (MT5_DEMO_* in `.env.example`) in Phase 5?**
+6. **RESOLVED:** **Does the planner want to include G6 (MT5_DEMO_* in `.env.example`) in Phase 5?**
    - What we know: 3-line addition to `.env.example`. No code change.
    - Recommendation: include as a Wave A trailing micro-task. Closes BACK-05 partial → satisfied.
 
