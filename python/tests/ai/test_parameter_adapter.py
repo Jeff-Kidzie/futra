@@ -100,3 +100,54 @@ def test_to_ipc_params_produces_correct_format(adapter):
     assert "confidence" in ipc
     assert ipc["sl_percent"] > 0
     assert ipc["tp_percent"] > 0
+
+
+def test_instance_multipliers_are_independent():
+    """BL-01 regression (Phase 2 02-REVIEW.md): instance-level dict copies in
+    ParameterAdapter.__init__ must shadow the class-level dicts so that mutating
+    one adapter never affects another adapter or the class default.
+
+    The fix lives at parameter_adapter.py:54-56 (commit 2dfd5e1).
+    This test catches any future refactor that silently removes those three lines.
+    """
+    from python.ai.parameter_adapter import ParameterAdapter
+
+    # Capture the class-level defaults BEFORE creating instances
+    class_sl_trending_default = ParameterAdapter.SL_MULTIPLIERS["trending"]
+    class_tp_trending_default = ParameterAdapter.TP_MULTIPLIERS["trending"]
+    class_lot_trending_default = ParameterAdapter.LOT_MULTIPLIERS["trending"]
+
+    a1 = ParameterAdapter()
+    a2 = ParameterAdapter()
+
+    # Mutate a1 only
+    a1.SL_MULTIPLIERS["trending"] = 99.0
+    a1.TP_MULTIPLIERS["trending"] = 88.0
+    a1.LOT_MULTIPLIERS["trending"] = 77.0
+
+    # a1 sees its own mutations
+    assert a1.SL_MULTIPLIERS["trending"] == 99.0
+    assert a1.TP_MULTIPLIERS["trending"] == 88.0
+    assert a1.LOT_MULTIPLIERS["trending"] == 77.0
+
+    # a2 must be untouched (instance independence)
+    assert a2.SL_MULTIPLIERS["trending"] == class_sl_trending_default, (
+        "BL-01 regression: a1 mutation leaked into a2 SL_MULTIPLIERS"
+    )
+    assert a2.TP_MULTIPLIERS["trending"] == class_tp_trending_default, (
+        "BL-01 regression: a1 mutation leaked into a2 TP_MULTIPLIERS"
+    )
+    assert a2.LOT_MULTIPLIERS["trending"] == class_lot_trending_default, (
+        "BL-01 regression: a1 mutation leaked into a2 LOT_MULTIPLIERS"
+    )
+
+    # Class-level dicts must remain pristine (no leak into the class default either)
+    assert ParameterAdapter.SL_MULTIPLIERS["trending"] == class_sl_trending_default, (
+        "BL-01 regression: a1 mutation leaked into ParameterAdapter.SL_MULTIPLIERS class dict"
+    )
+    assert ParameterAdapter.TP_MULTIPLIERS["trending"] == class_tp_trending_default, (
+        "BL-01 regression: a1 mutation leaked into ParameterAdapter.TP_MULTIPLIERS class dict"
+    )
+    assert ParameterAdapter.LOT_MULTIPLIERS["trending"] == class_lot_trending_default, (
+        "BL-01 regression: a1 mutation leaked into ParameterAdapter.LOT_MULTIPLIERS class dict"
+    )
