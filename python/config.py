@@ -44,8 +44,14 @@ RETRY_DELAY_SECONDS = 5.0
 DEFAULT_BAR_COUNT = 1000
 
 # AI Engine configuration
-AI_LOG_DIR = Path(os.getenv("FUTRA_AI_LOG_DIR", str(Path(__file__).parent / "ai" / "decisions")))
-AI_STRATEGY_DIR = Path(os.getenv("FUTRA_AI_STRATEGY_DIR", str(Path(__file__).parent / "ai" / "strategies")))
+AI_LOG_DIR = Path(os.getenv(
+    "FUTRA_AI_LOG_DIR",
+    str(Path(__file__).parent.parent / "logs" / "ai"),
+))
+STRATEGY_CONFIG_DIR = Path(os.getenv(
+    "FUTRA_STRATEGY_CONFIG_DIR",
+    str(Path(__file__).parent.parent / "configs" / "strategies"),
+))
 AI_DEFAULT_TIMEFRAME = os.getenv("FUTRA_AI_TIMEFRAME", "H1")
 AI_DEFAULT_EQUITY = float(os.getenv("FUTRA_AI_EQUITY", "10000.0"))
 
@@ -105,9 +111,6 @@ SESSION_EXPIRY_HOURS = int(os.getenv("FUTRA_SESSION_EXPIRY_HOURS", "24"))
 DASHBOARD_POLL_INTERVAL = float(os.getenv("FUTRA_DASHBOARD_POLL", "1.0"))
 DRAWDOWN_ALERT_THRESHOLD = float(os.getenv("FUTRA_DRAWDOWN_ALERT_PCT", "10.0"))
 DAILY_LOSS_ALERT_THRESHOLD = float(os.getenv("FUTRA_DAILY_LOSS_ALERT", "500.0"))
-# AI log directory (Phase 2) — may not exist until Phase 2 is executed
-AI_LOG_DIR = Path(os.getenv("FUTRA_AI_LOG_DIR", "logs/ai"))
-STRATEGY_CONFIG_DIR = Path(os.getenv("FUTRA_STRATEGY_CONFIG_DIR", "configs/strategies"))
 
 
 # --- Production Deployment Configuration ---
