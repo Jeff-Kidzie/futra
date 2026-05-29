@@ -16,6 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: AI Engine** - Regime detection adapts SL/TP and position sizing based on market conditions (completed 2026-05-26)
 - [x] **Phase 3: Validation** - Backtesting and paper trading prove the system works before live capital (completed 2026-05-28)
 - [x] **Phase 4: Monitoring Dashboard** - Trading activity and AI decisions visible from anywhere via authenticated web dashboard (completed 2026-05-28)
+- [ ] **Phase 5: Close v1.0 integration gaps** - Trade log schema, AI log path, strategy dir, decision logger wiring, Phase 2 BL-01 class-dict fix
 
 ## Phase Details
 
@@ -110,10 +111,37 @@ Cross-cutting constraints:
 - Auth token format (Bearer token in Authorization header) defined in 04-01, consumed by 04-02 (api.ts fetch wrapper) and 04-03 (Caddy security headers)
 - Caddy reverse proxy (04-03) routes all traffic to FastAPI — both 04-01 and 04-02 must be complete before deployment
 
+### Phase 5: Close v1.0 integration gaps
+**Goal**: Cross-phase data contracts align so every audit-identified integration gap closes — EA trade log emits the event-typed schema dashboard readers consume, AI decision log writes to a single canonical path the dashboard expects, strategy directory is one constant + one env var, AIEngine default-instantiates DecisionLogger, and Phase 2 BL-01 instance-isolation is locked by regression tests
+**Depends on**: Phase 4
+**Requirements**: DATA-08, AI-04, AI-05, DASH-02, DASH-03, DASH-04
+**Plans**: 7 plans in 3 waves
+
+**Wave 1** (parallel — no shared files):
+- [ ] 05-01-PLAN.md — Config foundation: collapse duplicate AI_LOG_DIR (G3), merge AI_STRATEGY_DIR into STRATEGY_CONFIG_DIR (G4 config side), document MT5_DEMO_* env vars (G6); python/config.py + .env.example
+- [ ] 05-07-PLAN.md — BL-01 regression tests: ParameterAdapter instance independence + StrategyManager cross-contamination (test-only — production fix already in 2dfd5e1)
+
+**Wave 2** *(blocked on 05-01 completion)*:
+- [ ] 05-02-PLAN.md — G1 EA-side schema rewrite: Logger.mqh emits event-typed JSONL (LogTradeOpen/Close/Modify), OrderManager + PositionManager call-site updates, position-ticket bug co-fix, pre-OrderSend POSITION_PROFIT capture; ends with operator demo MT5 manual gate
+- [ ] 05-03-PLAN.md — G2 + G5 merged: DecisionLogger single-file mode + required timeframe param, AIEngine default-on DecisionLogger via enable_decision_log kwarg, timeframe propagated through evaluate_symbol
+- [ ] 05-04-PLAN.md — G4 producer + G7: strategy_manager.py imports STRATEGY_CONFIG_DIR; dashboard/api/equity.py wires FUTRA_INITIAL_BALANCE
+
+**Wave 3** *(blocked on Wave 2 completion)*:
+- [ ] 05-05-PLAN.md — G1 contract tests: shared ea_log_fixtures.py helper, reshape test_trades.py/test_equity.py to use EA-format strings, new test_trade_log_contract.py producer→consumer integration tests
+- [ ] 05-06-PLAN.md — G2/G3/G4/G5 contract tests: update test_decision_logger.py + test_engine.py for new signatures, new test_decision_log_contract.py + test_strategy_contract.py + test_config_no_duplicates.py regression guards
+
+Scope (from .planning/v1.0-MILESTONE-AUDIT.md):
+- G1: Trade log schema — EA Logger.mqh emits flat schema; dashboard trades.py filters on event field EA never writes
+- G2: AI decision log path — writer emits ai_decisions_YYYY-MM-DD.jsonl; dashboard reads decision_log.jsonl
+- G3: AI_LOG_DIR defined twice in config.py with second definition overriding the first
+- G4: Strategy directory mismatch — writer uses AI_STRATEGY_DIR (python/ai/strategies); dashboard reads STRATEGY_CONFIG_DIR (configs/strategies)
+- G5: AIEngine defaults decision_logger=None — no production entry point wires it on
+- Phase 2 BL-01: ParameterAdapter multiplier dicts are class-level and mutated in place — strategies cross-contaminate across instances
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -121,3 +149,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. AI Engine | 2/2 | Complete   | 2026-05-26 |
 | 3. Validation | 2/2 | Complete    | 2026-05-28 |
 | 4. Monitoring Dashboard | 3/3 | Complete   | 2026-05-28 |
+| 5. Close v1.0 integration gaps | 0/7 | Planned (3 waves) | — |
