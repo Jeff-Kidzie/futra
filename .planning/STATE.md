@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
 milestone: v1.0
-milestone_name: milestone
-status: verified
-last_updated: "2026-05-28T00:00:00.000Z"
+milestone_name: MVP — Trading Foundation + Validation + Monitoring
+status: executing
+last_updated: "2026-05-29T02:00:26.834Z"
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 10
-  completed_plans: 10
-  percent: 100
+  total_phases: 1
+  completed_phases: 0
+  total_plans: 7
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -19,15 +19,15 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-23)
 
 **Core value:** Consistent profit with manageable drawdowns — the system must deliver steady returns while keeping risk under control
-**Current focus:** Phase 04 — monitoring-dashboard
+**Current focus:** Phase 05 — close v1.0 integration gaps
 
 ## Current Position
 
-Phase: 04 (monitoring-dashboard) — VERIFIED
-Plans: 3/3 complete + 3 gap-closure commits (cbdecfa, 9eb5e3c, eb69f1e)
-Status: Milestone v1.0 ready for completion
+Phase: 05 (close-v1-0-integration-gaps) — Not planned yet
+Plans: 0/0 — run `/gsd-plan-phase 5` to break down
+Status: Ready to execute
 
-Progress: [██████████] 100%
+Progress: [████████░░] 80% (4/5 phases complete)
 
 ## Performance Metrics
 
@@ -55,6 +55,10 @@ Progress: [██████████] 100%
 *Updated after each plan completion*
 
 ## Accumulated Context
+
+### Roadmap Evolution
+
+- Phase 5 added: Close v1.0 integration gaps — trade log schema, AI log path, strategy dir, decision logger wiring, Phase 2 BL-01 class-dict fix
 
 ### Decisions
 
