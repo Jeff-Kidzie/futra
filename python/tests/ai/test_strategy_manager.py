@@ -133,3 +133,57 @@ def test_apply_strategy_modifies_instances(manager, detector, adapter, tmp_path)
     assert result is True
     assert detector.adx_trend == 40.0
     assert adapter.max_position_size == 0.5
+
+
+def test_apply_strategy_does_not_cross_contaminate(tmp_path):
+    """BL-01 regression: applying a strategy to adapter A must NOT affect adapter B.
+
+    Export a strategy whose `parameter_adapter.lot_multipliers` overrides the
+    "trending" entry, apply it to adapter_a, and assert adapter_b's class-derived
+    default for "trending" is intact.
+
+    This locks the Phase 2 BL-01 fix (parameter_adapter.py:54-56) at the strategy-
+    application level — i.e., catches the original bug as reported in 02-REVIEW.md.
+    """
+    from python.ai.regime_detector import RegimeDetector
+    from python.ai.parameter_adapter import ParameterAdapter
+    from python.ai.strategy_manager import StrategyManager
+
+    manager = StrategyManager(strategy_dir=tmp_path)
+
+    adapter_a = ParameterAdapter()
+    adapter_b = ParameterAdapter()
+    detector_for_apply = RegimeDetector()
+
+    # Build a custom-multiplier adapter to export
+    custom_adapter = ParameterAdapter()
+    custom_adapter.LOT_MULTIPLIERS["trending"] = 0.01  # extreme value to detect leakage
+
+    # Capture B's pristine value BEFORE applying any strategy
+    b_trending_before = adapter_b.LOT_MULTIPLIERS["trending"]
+
+    # Export the custom strategy and re-import it
+    path = manager.export_strategy(
+        RegimeDetector(),
+        custom_adapter,
+        filepath=tmp_path / "custom_strategy.json",
+    )
+    strategy = manager.import_strategy(path)
+
+    # Apply ONLY to adapter_a
+    manager.apply_strategy(detector_for_apply, adapter_a, strategy)
+
+    # adapter_a got the custom value
+    assert adapter_a.LOT_MULTIPLIERS["trending"] == 0.01, (
+        "Custom multiplier did not land in adapter_a — apply_strategy failure"
+    )
+
+    # adapter_b is untouched
+    assert adapter_b.LOT_MULTIPLIERS["trending"] == b_trending_before, (
+        "BL-01 regression: apply_strategy(adapter_a) leaked into adapter_b.LOT_MULTIPLIERS"
+    )
+
+    # Class default is pristine
+    assert ParameterAdapter.LOT_MULTIPLIERS["trending"] == b_trending_before, (
+        "BL-01 regression: apply_strategy mutated ParameterAdapter class dict"
+    )
