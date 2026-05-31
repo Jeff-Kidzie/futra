@@ -6,7 +6,7 @@ import json
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
-from ..config import AI_STRATEGY_DIR
+from ..config import STRATEGY_CONFIG_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class StrategyManager:
     }
 
     def __init__(self, strategy_dir: Path | None = None):
-        self.strategy_dir = strategy_dir or AI_STRATEGY_DIR
+        self.strategy_dir = strategy_dir or STRATEGY_CONFIG_DIR
         self.strategy_dir.mkdir(parents=True, exist_ok=True)
 
     def export_strategy(
