@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, Query
 from ..auth import require_auth
 from ..models import EquityPoint
-from ...config import IPC_DIR
+from ...config import IPC_DIR, FUTRA_INITIAL_BALANCE
 
 logger = logging.getLogger(__name__)
 
@@ -16,10 +16,12 @@ router = APIRouter(prefix="/api/equity-curve", tags=["equity"])
 
 def compute_equity_curve(
     trade_log_path: Path | None = None,
-    initial_balance: float = 10000.0,
+    initial_balance: float | None = None,
     days: int = 30,
 ) -> list[dict]:
     """Replay trades from JSONL log to build daily equity curve."""
+    if initial_balance is None:
+        initial_balance = FUTRA_INITIAL_BALANCE
     path = trade_log_path or TRADE_LOG_PATH
     if not path.exists():
         today = datetime.now(timezone.utc).date().isoformat()
