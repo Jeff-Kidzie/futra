@@ -4,7 +4,6 @@ Per AI-04: Logs regime, confidence, chosen parameters, and reasoning.
 Per D-08: Per-symbol files in dedicated directory.
 """
 import json
-import os
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
@@ -16,23 +15,14 @@ logger = logging.getLogger(__name__)
 class DecisionLogger:
     """Structured JSONL logger for AI parameter decisions.
 
-    Writes one JSON object per line to a rotating daily log file.
+    Writes one JSON object per line to a single canonical log file (decision_log.jsonl).
     Human-readable format — each line is a complete, self-contained decision record.
     """
 
     def __init__(self, log_dir: Path | None = None):
         self.log_dir = log_dir or AI_LOG_DIR
         self.log_dir.mkdir(parents=True, exist_ok=True)
-        self._current_date = None
-        self._file_path = None
-
-    def _get_log_path(self) -> Path:
-        """Get today's log file path. Rotates daily."""
-        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-        if today != self._current_date:
-            self._current_date = today
-            self._file_path = self.log_dir / f"ai_decisions_{today}.jsonl"
-        return self._file_path
+        self.log_path = self.log_dir / "decision_log.jsonl"
 
     def _build_reasoning(
         self,
@@ -81,6 +71,7 @@ class DecisionLogger:
     def log_decision(
         self,
         symbol: str,
+        timeframe: str,
         regime: str,
         confidence: float,
         sl_pips: float,
@@ -94,6 +85,7 @@ class DecisionLogger:
 
         Args:
             symbol: Trading symbol (e.g., "EURUSD")
+            timeframe: Decision timeframe (e.g., "H1")
             regime: Detected regime ("trending"/"ranging"/"volatile"/"quiet")
             confidence: Regime confidence (0.0-1.0)
             sl_pips: Adapted stop-loss in pips
@@ -130,6 +122,7 @@ class DecisionLogger:
         record = {
             "timestamp": timestamp,
             "symbol": symbol,
+            "timeframe": timeframe,
             "regime": regime,
             "confidence": round(confidence, 4),
             "sl_pips": round(sl_pips, 1),
@@ -141,12 +134,11 @@ class DecisionLogger:
             "reasoning": reasoning,
         }
 
-        log_path = self._get_log_path()
         try:
-            with open(log_path, "a") as f:
+            with open(self.log_path, "a") as f:
                 f.write(json.dumps(record) + "\n")
             logger.debug(f"Logged AI decision: {symbol} {regime}")
         except OSError as e:
             logger.error(f"Failed to write decision log: {e}")
 
-        return log_path
+        return self.log_path
