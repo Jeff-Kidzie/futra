@@ -20,17 +20,19 @@ string GetCurrentTimestamp()
 }
 
 //+------------------------------------------------------------------+
-//| Append a TradeResult as a JSON line to trade_log.jsonl           |
+//| Log a trade_open event as a JSON line to trade_log.jsonl         |
+//| Called after successful OrderSend for new positions.              |
 //| Manual JSON construction — MQL5 has no native JSON library.      |
 //| On FileOpen failure, outputs to Print() only (no crash).         |
 //+------------------------------------------------------------------+
-void LogTrade(TradeResult &result)
+void LogTradeOpen(TradeResult &result)
 {
    string timestamp = GetCurrentTimestamp();
    string jsonLine = StringFormat(
-      "{\"ticket\":%I64u,\"symbol\":\"%s\",\"type\":\"%s\","
-      "\"volume\":%.2f,\"price\":%.5f,\"sl\":%.5f,\"tp\":%.5f,"
-      "\"retcode\":%d,\"comment\":\"%s\",\"timestamp\":\"%s\"}",
+      "{\"event\":\"trade_open\",\"ticket\":%I64u,\"symbol\":\"%s\","
+      "\"direction\":\"%s\",\"volume\":%.2f,\"price\":%.5f,"
+      "\"sl\":%.5f,\"tp\":%.5f,\"retcode\":%d,"
+      "\"comment\":\"%s\",\"timestamp\":\"%s\"}",
       result.ticket, result.symbol, result.type,
       result.volume, result.price, result.sl, result.tp,
       result.retcode, result.comment, timestamp
@@ -42,10 +44,79 @@ void LogTrade(TradeResult &result)
 
    if(handle == INVALID_HANDLE)
    {
-      Print("LogTrade: FileOpen failed for ", TRADE_LOG_FILE,
+      Print("LogTradeOpen: FileOpen failed for ", TRADE_LOG_FILE,
             ", error: ", GetLastError(),
             " | Trade: ticket=", result.ticket,
             ", retcode=", result.retcode);
+      return;
+   }
+
+   // Seek to end for append
+   FileSeek(handle, 0, SEEK_END);
+   FileWrite(handle, jsonLine);
+   FileClose(handle);
+}
+
+//+------------------------------------------------------------------+
+//| Log a trade_close event as a JSON line to trade_log.jsonl        |
+//| Called after closing OrderSend; profit captured BEFORE close.     |
+//| ticket/direction must be the POSITION's (not the closing order). |
+//+------------------------------------------------------------------+
+void LogTradeClose(TradeResult &result, double profit)
+{
+   string timestamp = GetCurrentTimestamp();
+   string jsonLine = StringFormat(
+      "{\"event\":\"trade_close\",\"ticket\":%I64u,\"symbol\":\"%s\","
+      "\"direction\":\"%s\",\"volume\":%.2f,\"close_price\":%.5f,"
+      "\"profit\":%.2f,\"retcode\":%d,\"comment\":\"%s\","
+      "\"timestamp\":\"%s\"}",
+      result.ticket, result.symbol, result.type,
+      result.volume, result.price, profit,
+      result.retcode, result.comment, timestamp
+   );
+
+   // TRADE_LOG_FILE already includes "Futra/" prefix
+   ResetLastError();
+   int handle = FileOpen(TRADE_LOG_FILE, FILE_TXT|FILE_READ|FILE_WRITE|FILE_SHARE_READ);
+
+   if(handle == INVALID_HANDLE)
+   {
+      Print("LogTradeClose: FileOpen failed for ", TRADE_LOG_FILE,
+            ", error: ", GetLastError(),
+            " | Trade: ticket=", result.ticket,
+            ", retcode=", result.retcode);
+      return;
+   }
+
+   // Seek to end for append
+   FileSeek(handle, 0, SEEK_END);
+   FileWrite(handle, jsonLine);
+   FileClose(handle);
+}
+
+//+------------------------------------------------------------------+
+//| Log a trade_modify event as a JSON line to trade_log.jsonl       |
+//| Called after successful SL/TP modification via OrderSend.         |
+//+------------------------------------------------------------------+
+void LogTradeModify(ulong ticket, double sl, double tp, int retcode)
+{
+   string timestamp = GetCurrentTimestamp();
+   string jsonLine = StringFormat(
+      "{\"event\":\"trade_modify\",\"ticket\":%I64u,"
+      "\"sl\":%.5f,\"tp\":%.5f,\"retcode\":%d,\"timestamp\":\"%s\"}",
+      ticket, sl, tp, retcode, timestamp
+   );
+
+   // TRADE_LOG_FILE already includes "Futra/" prefix
+   ResetLastError();
+   int handle = FileOpen(TRADE_LOG_FILE, FILE_TXT|FILE_READ|FILE_WRITE|FILE_SHARE_READ);
+
+   if(handle == INVALID_HANDLE)
+   {
+      Print("LogTradeModify: FileOpen failed for ", TRADE_LOG_FILE,
+            ", error: ", GetLastError(),
+            " | ticket=", ticket,
+            ", retcode=", retcode);
       return;
    }
 
@@ -62,8 +133,8 @@ void LogError(string context, int errorCode, string details)
 {
    string timestamp = GetCurrentTimestamp();
    string jsonLine = StringFormat(
-      "{\"level\":\"error\",\"context\":\"%s\",\"errorCode\":%d,"
-      "\"details\":\"%s\",\"timestamp\":\"%s\"}",
+      "{\"event\":\"error\",\"level\":\"error\",\"context\":\"%s\","
+      "\"errorCode\":%d,\"details\":\"%s\",\"timestamp\":\"%s\"}",
       context, errorCode, details, timestamp
    );
 
