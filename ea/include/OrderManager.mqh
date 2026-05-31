@@ -110,13 +110,13 @@ TradeResult OpenBuyOrder(string symbol, double volume, double slPercent = 0, dou
    tradeResult.comment   = result.comment;
    tradeResult.timestamp = TimeCurrent();
 
-   // Log every trade result (per DATA-08)
-   LogTrade(tradeResult);
+    // Log every trade result (per DATA-08)
+    LogTradeOpen(tradeResult);
 
-   if(!success || result.retcode != TRADE_RETCODE_DONE)
-   {
-      LogError("OpenBuyOrder", result.retcode, "OrderSend failed");
-   }
+    if(!success || result.retcode != TRADE_RETCODE_DONE)
+    {
+       LogError("OpenBuyOrder", result.retcode, "OrderSend failed");
+    }
 
    return(tradeResult);
 }
@@ -186,13 +186,13 @@ TradeResult OpenSellOrder(string symbol, double volume, double slPercent = 0, do
    tradeResult.comment   = result.comment;
    tradeResult.timestamp = TimeCurrent();
 
-   // Log every trade result (per DATA-08)
-   LogTrade(tradeResult);
+    // Log every trade result (per DATA-08)
+    LogTradeOpen(tradeResult);
 
-   if(!success || result.retcode != TRADE_RETCODE_DONE)
-   {
-      LogError("OpenSellOrder", result.retcode, "OrderSend failed");
-   }
+    if(!success || result.retcode != TRADE_RETCODE_DONE)
+    {
+       LogError("OpenSellOrder", result.retcode, "OrderSend failed");
+    }
 
    return(tradeResult);
 }

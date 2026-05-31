@@ -19,9 +19,12 @@ bool ClosePosition(ulong ticket)
       return(false);
    }
 
-   string symbol   = PositionGetString(POSITION_SYMBOL);
-   double volume   = PositionGetDouble(POSITION_VOLUME);
-   long   posType  = PositionGetInteger(POSITION_TYPE);
+    string symbol   = PositionGetString(POSITION_SYMBOL);
+    double volume   = PositionGetDouble(POSITION_VOLUME);
+    long   posType  = PositionGetInteger(POSITION_TYPE);
+
+    // Capture profit BEFORE OrderSend — after close the position is gone (G1 fix)
+    double profitAtClose = PositionGetDouble(POSITION_PROFIT);
 
    // Determine close order type (opposite of position)
    ENUM_ORDER_TYPE orderType;
@@ -66,20 +69,20 @@ bool ClosePosition(ulong ticket)
    ResetLastError();
    bool success = OrderSend(request, result);
 
-   // Log the close as a trade result
-   TradeResult logEntry;
-   ZeroMemory(logEntry);
-   logEntry.ticket    = result.order;
-   logEntry.symbol    = symbol;
-   logEntry.type      = (posType == POSITION_TYPE_BUY) ? "sell" : "buy";
-   logEntry.volume    = volume;
-   logEntry.price     = result.price;
-   logEntry.sl        = 0;
-   logEntry.tp        = 0;
-   logEntry.retcode   = result.retcode;
-   logEntry.comment   = "Position closed";
-   logEntry.timestamp = TimeCurrent();
-   LogTrade(logEntry);
+    // Log the close as a trade result (G1: position ticket + position direction)
+    TradeResult logEntry;
+    ZeroMemory(logEntry);
+    logEntry.ticket    = ticket;                                          // FIX: position ticket, not result.order
+    logEntry.symbol    = symbol;
+    logEntry.type      = (posType == POSITION_TYPE_BUY) ? "buy" : "sell"; // FIX: position direction
+    logEntry.volume    = volume;
+    logEntry.price     = result.price;
+    logEntry.sl        = 0;
+    logEntry.tp        = 0;
+    logEntry.retcode   = result.retcode;
+    logEntry.comment   = "Position closed";
+    logEntry.timestamp = TimeCurrent();
+    LogTradeClose(logEntry, profitAtClose);
 
    if(!success || result.retcode != TRADE_RETCODE_DONE)
    {
@@ -150,20 +153,8 @@ bool ModifySLTP(ulong ticket, double newSL, double newTP)
    ResetLastError();
    bool success = OrderSend(request, result);
 
-   // Log the modification
-   TradeResult logEntry;
-   ZeroMemory(logEntry);
-   logEntry.ticket    = result.order;
-   logEntry.symbol    = symbol;
-   logEntry.type      = "modify";
-   logEntry.volume    = 0;
-   logEntry.price     = 0;
-   logEntry.sl        = newSL;
-   logEntry.tp        = newTP;
-   logEntry.retcode   = result.retcode;
-   logEntry.comment   = "SL/TP modified";
-   logEntry.timestamp = TimeCurrent();
-   LogTrade(logEntry);
+    // Log the modification (G1: direct call, no TradeResult wrapper needed)
+    LogTradeModify(ticket, newSL, newTP, result.retcode);
 
    if(!success || result.retcode != TRADE_RETCODE_DONE)
    {
