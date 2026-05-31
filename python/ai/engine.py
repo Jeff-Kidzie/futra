@@ -29,12 +29,15 @@ class AIEngine:
         regime_detector: RegimeDetector | None = None,
         parameter_adapter: ParameterAdapter | None = None,
         decision_logger: DecisionLogger | None = None,
+        enable_decision_log: bool = True,
     ):
         self.symbols = symbols or DEFAULT_SYMBOLS
         self.timeframe = timeframe
         self.detector = regime_detector or RegimeDetector()
         self.adapter = parameter_adapter or ParameterAdapter()
-        self.decision_logger = decision_logger  # None → logging disabled
+        if decision_logger is None and enable_decision_log:
+            decision_logger = DecisionLogger()
+        self.decision_logger = decision_logger
         self.logger = logging.getLogger(__name__)
 
     def evaluate_symbol(self, symbol: str) -> dict | None:
@@ -92,6 +95,7 @@ class AIEngine:
                 try:
                     self.decision_logger.log_decision(
                         symbol=symbol,
+                        timeframe=self.timeframe,
                         regime=regime,
                         confidence=confidence,
                         sl_pips=adapted["sl_pips"],
