@@ -146,7 +146,7 @@ TradeResult PlacePendingOrder(string symbol, ENUM_ORDER_TYPE orderType,
    result.retcode   = mqlResult.retcode;
    result.comment   = mqlResult.comment;
 
-   LogTrade(result);
+    LogTradeOpen(result);
 
    if(!success || mqlResult.retcode != TRADE_RETCODE_DONE)
    {
