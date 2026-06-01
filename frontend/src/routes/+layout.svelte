@@ -1,6 +1,7 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import { isAuthenticated } from '$lib/stores';
 	import { connectWebSocket, disconnectWebSocket } from '$lib/ws';
 	import Nav from '$lib/components/Nav.svelte';
@@ -15,8 +16,12 @@
 		isAuthenticated.set(!!token);
 
 		unsubscribeAuth = isAuthenticated.subscribe((authed) => {
-			if (authed) connectWebSocket();
-			else disconnectWebSocket();
+			if (authed) {
+				connectWebSocket();
+			} else {
+				disconnectWebSocket();
+				if ($page.url.pathname !== '/login') goto('/login');
+			}
 		});
 	});
 
